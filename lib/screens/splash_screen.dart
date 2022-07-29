@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
     void Function(String) onError,
   ) {
     _platform.invokeMethod('search', query).then((value) {
-      final _res = value as List<Object?>;
+      final _res = value as Map<Object,List<Object?>>;
       log('res 1 ${_res.toString()}');
 
       setState(() {
