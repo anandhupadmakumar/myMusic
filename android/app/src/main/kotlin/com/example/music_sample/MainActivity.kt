@@ -185,6 +185,7 @@ class MainActivity: FlutterActivity() {
             tempList.put("alubm",album)
             tempList.put("artist",artist)
             tempList.put("path",pathss)
+            
             cursor.close()
 
 

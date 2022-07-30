@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         top: 120.0,
                         left: 20.0,
                         right: 0.0,
-                        bottom: 0.0,
+                        bottom: 80.0,
                         child: SafeArea(
                           child: ValueListenableBuilder(
                               valueListenable: musicValueNotifier,
