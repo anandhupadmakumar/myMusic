@@ -231,7 +231,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
               themePink(),
               Positioned(
                 left: 20,
-                top: 10,
+                top: 0,
                 right: 20,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

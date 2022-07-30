@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 Widget themeBlue() {
   return Positioned(
-    top: 20,
+    top: 0.0,
     left: 100,
     child: Container(
       width: 200,

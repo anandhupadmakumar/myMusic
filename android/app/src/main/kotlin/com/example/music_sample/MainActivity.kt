@@ -16,8 +16,8 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
-
-
+import java.util.*
+import kotlin.collections.HashMap
 
 
 private const val CHANNEL = "search_files_in_storage/search"
@@ -142,8 +142,14 @@ class MainActivity: FlutterActivity() {
 
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun getAllAudio(): ArrayList<String>{
-        val tempList = ArrayList<String>()
+    private fun getAllAudio(): HashMap<String,List<String>>{
+        val tempList =  HashMap<String,List<String>>()
+        val title= arrayListOf<String>()
+        val id= arrayListOf<String>()
+        val album= arrayListOf<String>()
+        val artist= arrayListOf<String>()
+        val pathss= arrayListOf<String>()
+        val durationk= arrayListOf<String>()
         val selection = MediaStore.Audio.Media.IS_MUSIC +  " != 0"
         val projection = arrayOf(
             MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
@@ -166,10 +172,24 @@ class MainActivity: FlutterActivity() {
 //                    val music = (id = idC, title = titleC, albums = albumC, artist = artistC, path = pathC, duration = durationC)
 //                    val file = File(music.path)
 //                    if(file.exists())
-                        tempList.add(pathC)
+                    title.add(titleC)
+                    id.add(idC)
+                    album.add(albumC)
+                    artist.add(artistC)
+                    pathss.add(pathC)
+//                    durationk.add(durationC)
+
                 }while (cursor.moveToNext())
+            tempList.put("title", title)
+            tempList.put("id",id)
+            tempList.put("alubm",album)
+            tempList.put("artist",artist)
+            tempList.put("path",pathss)
             cursor.close()
-            Log.i("array" , tempList.toString())
+
+
+//            tempList.put("title",id)
+            Log.i("array" , title.toString())
         }
         return tempList
     }

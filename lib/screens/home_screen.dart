@@ -195,8 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               color: Colors.white,
                                               overflow: TextOverflow.ellipsis),
                                         ),
-                                        subtitle: const Text(
-                                          'sample',
+                                        subtitle:  Text(
+                                          finalSongList[index].metas.album!,
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         trailing: IconButton(
