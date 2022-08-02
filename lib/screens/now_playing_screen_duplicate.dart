@@ -84,7 +84,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
             child: Marquee(
               text: realtimePlayingInfos.current!.audio.audio.metas.title!,
               pauseAfterRound: Duration(seconds: 0),
-              velocity: realtimePlayingInfos.duration.inMinutes.toDouble(),
+              velocity: 5,
               style: TextStyle(color: Colors.white, fontSize: 20),
               blankSpace: 30,
               crossAxisAlignment: CrossAxisAlignment.start,

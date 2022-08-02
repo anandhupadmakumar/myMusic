@@ -93,7 +93,7 @@ Widget textMoving( RealtimePlayingInfos realtimePlayingInfos, context) {
     height: MediaQuery.of(context).size.width * 0.055,
     child: Marquee(
       pauseAfterRound: Duration(seconds: 0),
-      velocity: realtimePlayingInfos.duration.inMinutes.toDouble(),
+      velocity: 5,
       style: TextStyle(color: Colors.white),
 
       blankSpace: 30,

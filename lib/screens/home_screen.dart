@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:io';
+
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-   
     setState(() {
       play(audioPlayer);
     });
@@ -51,8 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     //   ));
     //   log('inside for loop ................${widget.abc.toString()}');
     // }
-
-   
 
     await assetsaudioPlayer.open(
       Playlist(audios: finalSongList),
@@ -138,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           // if (audioPlayer.current.value !=
                                           //     null) {
                                           //   audioPlayer.stop();
-                                          // }
-
+                                          // }else{
                                           audioPlayer
                                               .playlistPlayAtIndex(index);
 
@@ -164,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         leading: CircleAvatar(
                                           maxRadius: 30,
+                                         
                                           backgroundImage: AssetImage(
                                               'assets/images/music logomp3.jpg'),
                                           // backgroundImage: AssetImage(
@@ -187,24 +186,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                        title: Text(
-                                          //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                                          finalSongList[index].metas.title!,
+                                        title: Padding(
+                                          padding: const EdgeInsets.only(bottom:10),
+                                          child: Text(
+                                            //realtimePlayingInfos.current!.audio.audio.metas.title!,
+                                            musicValueNotifier.value[0].title[index],
 
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              overflow: TextOverflow.ellipsis),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                overflow: TextOverflow.ellipsis),
+                                          ),
                                         ),
-                                        subtitle:  Text(
-                                          finalSongList[index].metas.album!,
+                                        subtitle: Text(
+                                          musicValueNotifier.value[0].album[index],
                                           style: TextStyle(color: Colors.white),
                                         ),
-                                        trailing: IconButton(
-                                            onPressed: () {
-                                              //search song
-                                            },
-                                            icon: const Icon(
-                                                Icons.more_vert_outlined)),
+                                        trailing: Text(musicValueNotifier.value[0].duration[index])
                                       );
                                     },
                                     separatorBuilder:
@@ -223,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         //  HomeListView(assetsAudioplayer: assetsaudioPlayer,),
                       ),
+                      
                       Positioned(
                         top: 40.0,
                         child: SizedBox(
@@ -269,5 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
     audioPlayer.dispose();
     _isDisposed = true;
+    
   }
 }

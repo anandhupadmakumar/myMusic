@@ -8,17 +8,17 @@ ValueNotifier<List<MusicModel>> musicValueNotifier = ValueNotifier([]);
 
 Future<void> addMusicList(MusicModel value) async {
   final musicListDb = await Hive.openBox<MusicModel>('music_db');
-  final id = await musicListDb.add(value);
-  value.id = id;
+  await musicListDb.put(0, value);
+ 
 
-  musicValueNotifier.value.add(value);
-  final musicListData = MusicModel(path: value.path, id: id);
-  musicListDb.put(id, musicListData);
-  log('musiclistlllllllllllllllllllllllllllllllll$musicListData');
+   musicValueNotifier.value.add(value);
+  // final musicListData = MusicModel(path: value.path, id: id);
+  // musicListDb.put(id, musicListData);
+  // log('musiclistlllllllllllllllllllllllllllllllll$musicListData');
   musicValueNotifier.notifyListeners();
 }
 
-Future<void> getAllStudentDetails() async {
+Future<void> getAllMusicList() async {
   final musicListDb = await Hive.openBox<MusicModel>('music_db');
   musicValueNotifier.value.clear();
    musicValueNotifier.value.addAll(musicListDb.values);

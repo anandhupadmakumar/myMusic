@@ -1,7 +1,9 @@
 package com.example.music_sample
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -84,17 +86,17 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == this.requestCode) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                // listExternalStorage()
-            } else {
-                Toast.makeText(this, "Until you grant the permission, I cannot list the files", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
+    // override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    //     if (requestCode == this.requestCode) {
+    //         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    //             // Permission is granted
+    //             // listExternalStorage()
+    //         } else {
+    //             Toast.makeText(this, "Until you grant the permission, I cannot list the files", Toast.LENGTH_SHORT)
+    //                 .show()
+    //         }
+    //     }
+    // }
 
 
 
@@ -150,11 +152,12 @@ class MainActivity: FlutterActivity() {
         val artist= arrayListOf<String>()
         val pathss= arrayListOf<String>()
         val durationk= arrayListOf<String>()
+        val imagess= arrayListOf<String>()
         val selection = MediaStore.Audio.Media.IS_MUSIC +  " != 0"
         val projection = arrayOf(
-            MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATE_ADDED,
-            MediaStore.Audio.Media.DATA)
+            MediaStore.Audio.Media.DATA,MediaStore.Audio.Media.ALBUM_ARTIST)
 
         val cursor = this.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,selection,null,
@@ -162,29 +165,35 @@ class MainActivity: FlutterActivity() {
         if(cursor != null){
             if(cursor.moveToFirst())
                 do {
-                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))?:"Unknown"
-                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))?:"Unknown"
-                    val albumC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))?:"Unknown"
-                    val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))?:"Unknown"
+                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                   var idC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+                    val albumC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+                    val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-                    val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                    val durationC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
+                    // String albumImage = String.valueOf(ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),idC));
+                    val albumImage =Uri.parse("content://media/external/audio/albumart")
+                    val  images:Uri=  ContentUris.withAppendedId(albumImage ,idC )
+
+
 //
-//                    val music = (id = idC, title = titleC, albums = albumC, artist = artistC, path = pathC, duration = durationC)
-//                    val file = File(music.path)
-//                    if(file.exists())
+//
                     title.add(titleC)
-                    id.add(idC)
+//                    id.add(idC)
                     album.add(albumC)
                     artist.add(artistC)
                     pathss.add(pathC)
-//                    durationk.add(durationC)
+                    imagess.add(images.path!!)
+                   durationk.add(durationC)
 
                 }while (cursor.moveToNext())
             tempList.put("title", title)
-            tempList.put("id",id)
-            tempList.put("alubm",album)
+            // tempList.put("id",id)
+            tempList.put("album",album)
             tempList.put("artist",artist)
             tempList.put("path",pathss)
+            tempList.put("image",imagess)
+            tempList.put("duration",durationk)
             
             cursor.close()
 
