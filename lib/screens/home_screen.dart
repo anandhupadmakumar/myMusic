@@ -56,11 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await assetsaudioPlayer.open(
       Playlist(audios: finalSongList),
-      showNotification: false,
+      showNotification: true,
       autoStart: false,
       loopMode: LoopMode.playlist,
-      notificationSettings: const NotificationSettings(
-          stopEnabled: false, nextEnabled: true, prevEnabled: true),
+      // notificationSettings: const NotificationSettings(
+      //     stopEnabled: false, nextEnabled: true, prevEnabled: true),
     );
   }
 
