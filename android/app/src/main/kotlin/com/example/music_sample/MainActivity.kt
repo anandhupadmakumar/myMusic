@@ -58,23 +58,7 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-//    private fun requestRuntimePermission():Boolean {
-//        return if (ActivityCompat.checkSelfPermission(
-//                this,
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE
-//            )
-//            != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                this,
-//                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-//                13
-//            )
-//            true
-//        }else{
-//            false
-//        }
-//    }
+
 
     private fun requestPermissionAndListFiles():Boolean {
         Log.e("PERMISSION" , "getting permission status")
@@ -85,62 +69,6 @@ class MainActivity: FlutterActivity() {
             return true;
         }
     }
-
-    // override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-    //     if (requestCode == this.requestCode) {
-    //         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-    //             // Permission is granted
-    //             // listExternalStorage()
-    //         } else {
-    //             Toast.makeText(this, "Until you grant the permission, I cannot list the files", Toast.LENGTH_SHORT)
-    //                 .show()
-    //         }
-    //     }
-    // }
-
-
-
-
-//    private fun listExternalStorage(query:List<String>):List<String>? {
-//        val state = Environment.getExternalStorageState()
-//
-//        if (Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state) {
-//
-//            return listFiles(Environment.getExternalStorageDirectory(),query)
-//        }else{
-//            return null;
-//        }
-//    }
-
-    /**
-     * Recursively list files from a given directory.
-     */
-//    private fun listFiles(directory: File,query:List<String>):List<String> {
-//        var foundList = arrayListOf<String>()
-//        val files = directory.listFiles()
-//        if (files != null) {
-//            for (file in files) {
-//                if (file != null) {
-//                    if (file.isDirectory) {
-//                        foundList.addAll( listFiles(file,query))
-//                    } else {
-//                        var path = file.absolutePath;
-//                        Log.w("FILE_CHECKING",path + "\n")
-//                        query.forEach { extension->
-//                            if( path.endsWith(extension))
-//                            {
-//                                foundList.add(path);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return  foundList
-//    }
-
-
-
 
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -176,6 +104,10 @@ class MainActivity: FlutterActivity() {
                     val  images:Uri=  ContentUris.withAppendedId(albumImage ,idC )
 
 
+
+
+
+
 //
 //
                     title.add(titleC)
@@ -183,7 +115,7 @@ class MainActivity: FlutterActivity() {
                     album.add(albumC)
                     artist.add(artistC)
                     pathss.add(pathC)
-                    imagess.add(images.path!!)
+//                   imagess.add(bitmap.toString())
                    durationk.add(durationC)
 
                 }while (cursor.moveToNext())

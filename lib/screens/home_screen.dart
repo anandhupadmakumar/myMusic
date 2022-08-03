@@ -55,11 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await assetsaudioPlayer.open(
       Playlist(audios: finalSongList),
-      showNotification: false,
+      showNotification: true,
       autoStart: false,
       loopMode: LoopMode.playlist,
-      notificationSettings: const NotificationSettings(
-          stopEnabled: false, nextEnabled: true, prevEnabled: true),
+      // notificationSettings: const NotificationSettings(
+      //     stopEnabled: false, nextEnabled: true, prevEnabled: true),
     );
   }
 
@@ -206,11 +206,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     separatorBuilder:
                                         (BuildContext context, int index) {
-                                      return const Padding(
+                                      return  Padding(
                                         padding: EdgeInsets.only(
                                             right: 20, top: 10, bottom: 10),
-                                        child: Divider(
-                                          thickness: 2,
+                                        child: Column(
+                                          children: [
+                                            Divider(
+                                              thickness: 2,
+                                            ),
+                                          
+                                          ],
                                         ),
                                       );
                                     },

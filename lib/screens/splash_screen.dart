@@ -89,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final tempAlbumImage = value['image'] as List<Object?>;
     log('aaaaaaaaaanandhuannnn $tempTitle');
     malbumImage = tempAlbumImage.map((e) => e.toString()).toList();
-    log("........................$malbumImage");
+    log("..........imageeeeeeee..............$malbumImage");
     log("........................${malbumImage.length}");
     final mDurationtemp = value['duration'] as List<Object?>;
     List<String> mDurationtemp2 =
@@ -191,8 +191,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   onSuccess(audioListFromStorage) async {
     convertingFromMap(audioListFromStorage);
-    final data = MusicModel(id: 0,
-        title: mTitle, path: mPath, album: malbum, duration: mDuration,);
+    final data = MusicModel(
+      id: 0,
+      title: mTitle,
+      path: mPath,
+      album: malbum,
+      duration: mDuration,
+    );
     await addMusicList(data);
     log('db for data..............??????????????$data');
     await getAllMusicList();
@@ -217,6 +222,7 @@ class _SplashScreenState extends State<SplashScreen> {
           metas: Metas(
             title: musicValueNotifier.value[0].title[i],
             artist: musicValueNotifier.value[0].album[i],
+            image: MetasImage.file(malbumImage[i])
           )));
       log('inside for loop ................${finalSongList.toString()}');
     }

@@ -64,11 +64,11 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
       radius: 120,
       backgroundColor: Color.fromARGB(0, 48, 207, 228),
       backgroundImage:
-          // AssetImage(widget.realtimePlayingInfos
-          //     .current!.audio.audio.metas.image!.path)
-          AssetImage(
-        'assets/images/now_playing-mp3.png',
-      ),
+          AssetImage(realtimePlayingInfos
+              .current!.audio.audio.metas.image!.path)
+      //     AssetImage(
+      //   'assets/images/now_playing-mp3.png',
+      // ),
     );
   }
 
