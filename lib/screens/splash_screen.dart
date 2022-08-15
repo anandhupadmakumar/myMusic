@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -7,10 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:music_sample/db_functions/db_crud_function.dart';
 import 'package:music_sample/db_functions/music_modal_class.dart';
+import 'package:music_sample/main.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
+import '../json_folder/musiclist_jason.dart';
 import 'home_screen.dart';
+import 'home_screen_duplicate.dart';
+
+List<MusicListData> songlist2 = [];
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -30,6 +37,7 @@ List<String> mArtist = [];
 List<String> malbum = [];
 List<String> malbumImage = [];
 List<String> mDuration = [];
+List<int> mId = [];
 
 class _SplashScreenState extends State<SplashScreen> {
   List<String>? allAudios;
@@ -52,19 +60,27 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void searchInStorage() {
     _platform.invokeMethod('search').then((value) {
-      final _res = value as Map<Object?, Object?>;
-      log('res 1 ${_res.toString()}');
-      log('res2 valueeeeeeeee  ${value}');
+      print(value.toString());
+      final _res = value as String;
+
+      // final valueMap = jsonDecode(_res);
+      // // final a = MusicListData.fromJson(valueMap);
+      // List songlist = valueMap;
+      // final songlist2 = songlist.map((e) {
+      //   return MusicListData.fromJson(e);
+      // }).toList();
+
+      // log('res3 valueeeeeeeee  ${songlist2[1].duration}');
 
       onSuccess(_res);
     }).onError((error, stackTrace) {
-      log(error.toString());
+      log('anandhu' + error.toString());
 
       print(onSuccess);
     });
   }
 
-  void convertingFromMap(value) {
+  void convertingFromMap(Map value) async {
     final tempTitle = value['title'] as List<Object?>;
     log('aaaaaaaaaanandhuannnn $tempTitle');
     mTitle = tempTitle.map((e) => e.toString()).toList();
@@ -97,6 +113,9 @@ class _SplashScreenState extends State<SplashScreen> {
     log("........................$malbumImage");
     log("........................${malbumImage.length}");
     List<int> durationtemp = mDurationtemp2.map((e) => int.parse(e)).toList();
+    final mIdTemp = value['id'] as List<Object?>;
+    List<String> mId2 = mIdTemp.map((e) => e.toString()).toList();
+    mId = mId2.map((e) => int.parse(e)).toList();
 
     for (var i = 0; i < mDurationtemp.length; i++) {
       String mDuration1 =
@@ -104,6 +123,24 @@ class _SplashScreenState extends State<SplashScreen> {
       mDuration.add(mDuration1);
     }
     log('durationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn${mDuration.toString()}');
+    for (int i = 0; i < mPath.length; i++) {
+      final data = MusicModel(
+          id: mId[i],
+          title: mTitle[i],
+          path: mPath[i],
+          album: malbum[i],
+          duration: mDuration[i]);
+      // addMusicList(data);
+
+      await allSongsDb.put(i, data);
+      musicValueNotifier.value.add(data);
+      musicValueNotifier.notifyListeners();
+
+      log('db path >>>>>>>>>>>>>>>>>>>>>>${data.path}');
+      log('db title >>>>>>>>>>>>>>>>>>>>>>${data.title}');
+      log('db album >>>>>>>>>>>>>>>>>>>>>>${data.album}');
+      log('db duration >>>>>>>>>>>>>>>>>>>>>>${data.duration}');
+    }
   }
 
   String _printDuration(Duration duration) {
@@ -185,28 +222,37 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 5));
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (ctx) => HomeScreen()),
+      MaterialPageRoute(builder: (ctx) => HomeScreenDupe()),
     );
   }
 
   onSuccess(audioListFromStorage) async {
-    convertingFromMap(audioListFromStorage);
-    final data = MusicModel(
-      id: 0,
-      title: mTitle,
-      path: mPath,
-      album: malbum,
-      duration: mDuration,
-    );
-    await addMusicList(data);
-    log('db for data..............??????????????$data');
-    await getAllMusicList();
+    final valueMap = jsonDecode(audioListFromStorage);
+    // final a = MusicListData.fromJson(valueMap);
+    List songlist = valueMap;
+    songlist2 = songlist.map((e) {
+      return MusicListData.fromJson(e);
+    }).toList();
 
-    setState(() {
-      // allAudios = allAudio;
+    log('res3 valueeeeeeeee  ${songlist2[1].duration}');
+    // convertingFromMap(audioListFromStorage);
 
-      // a = [Audio(allVideos.toString())];
-    });
+    // final box = await Hive.openBox<MusicModel>('music_db');
+    // for (int i = 0; i < mPath.length; i++) {
+    //   final data =  MusicModel(
+    //     id: 1 ,
+    //     title: "aaa" ,
+    //     path: "mPath[i]" ,
+    //     album: "malbum[i] ",
+    //     duration: "mDuration[i]" ,
+    //   );
+
+    //  await  box.add(data);
+    //   log(box.toString());
+    //   box.close();
+    // }
+
+    // await getAllMusicList();
 
     // final data = MusicModel(
     //   path: allAudios,
@@ -214,15 +260,14 @@ class _SplashScreenState extends State<SplashScreen> {
     // // addMusicList(data);
     // log('db for data..............??????????????$data');
 
-    //   await getAllStudentDetails();
+    await getAllMusicList();
     //   dbSongs = musicValueNotifier.value[1].path!;
 
-    for (var i = 0; i < mPath.length; i++) {
-      finalSongList.add(Audio.file(musicValueNotifier.value[0].path[i],
+    for (var i = 0; i < songlist2.length; i++) {
+      finalSongList.add(Audio.file(songlist2[i].path!,
           metas: Metas(
-            title: musicValueNotifier.value[0].title[i],
-            artist: musicValueNotifier.value[0].album[i],
-            image: MetasImage.file(malbumImage[i])
+            title: songlist2[i].title,
+            artist: songlist2[i].albums,
           )));
       log('inside for loop ................${finalSongList.toString()}');
     }

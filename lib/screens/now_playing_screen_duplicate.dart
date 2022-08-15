@@ -1,14 +1,21 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 
 import 'package:marquee/marquee.dart';
+import 'package:music_sample/db_functions/db_crud_function.dart';
+import 'package:music_sample/db_functions/music_modal_class.dart';
+import 'package:music_sample/main.dart';
 
 import 'package:music_sample/widgets/bottom_sheet_miniplayer.dart';
 
+import '../widgets/bottom_sheet_mp_list.dart';
 import '../widgets/iconbtn_widget.dart';
 import '../widgets/realtimeinfo_slider.dart';
 import '../widgets/theme_color.dart';
 import '../widgets/timetext_slider.dart';
+import 'home_screen_duplicate.dart';
 
 class DupeNowPlayingScreen extends StatefulWidget {
   final index;
@@ -21,58 +28,126 @@ class DupeNowPlayingScreen extends StatefulWidget {
 }
 
 class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
-  // AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   // play(widget.audioPlayer);
-  // }
-
-  // void setupPlaylist() async {
-  //   await widget.audioPlayer.open(Playlist(audios: audioList),
-  //       showNotification: true, autoStart: false, loopMode: LoopMode.playlist);
-  // }
-
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   super.dispose();
-  //   widget.audioPlayer.dispose();
-  // }
-
+  @override
   Widget audioImage(RealtimePlayingInfos realtimePlayingInfos) {
-    // return Container(
-    //   height: MediaQuery.of(context).size.height * 0.45,
-    //   width: MediaQuery.of(context).size.width * 0.85,
-    //   child: Material(
-    //     elevation: 18.0,
-    //     color: Colors.transparent,
-    //     borderRadius: BorderRadius.circular(50.0),
-    //     child: ClipRRect(
-    //       borderRadius: BorderRadius.circular(50.0),
-    //       // child: Image.asset(
-    //       //   realtimePlayingInfos.current!.audio.audio.metas.image!.path,
-    //       //   fit: BoxFit.cover,
-    //       //   filterQuality: FilterQuality.high,
-    //       // ),
-    //     ),
-    //   ),
-    // );
-    return CircleAvatar(
+    return const CircleAvatar(
       radius: 120,
       backgroundColor: Color.fromARGB(0, 48, 207, 228),
       backgroundImage:
-          AssetImage(realtimePlayingInfos
-              .current!.audio.audio.metas.image!.path)
-      //     AssetImage(
-      //   'assets/images/now_playing-mp3.png',
-      // ),
+          // AssetImage(realtimePlayingInfos
+          //     .current!.audio.audio.metas.image!.path)
+          AssetImage(
+        'assets/images/now_playing-mp3.png',
+      ),
     );
   }
 
+  Future<void> nowPlayerBottomSheetPlaylist(
+      RealtimePlayingInfos realtimePlayingInfos) async {
+    showModalBottomSheet(
+        backgroundColor: Color.fromARGB(255, 33, 81, 88),
+        // isScrollControlled: true,
+        isDismissible: true,
+        enableDrag: false,
+        context: context,
+        builder: (ctx) {
+          return SafeArea(
+            child: ValueListenableBuilder(
+                valueListenable: playListNamesNotifier,
+                builder: (BuildContext context, List<MusicPlayListNames> value,
+                    Widget? _) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                              onTap: () {
+                                addPlaylistSongsDbNowPlay(
+                                    index, realtimePlayingInfos, context);
+                              },
+                              onLongPress: () => setState(() {
+                                    playListNamesDb.deleteAt(index);
+                                  }),
+
+                              // playMusic(index: index, assetsAudioplayer: assetAudioPlayer);
+
+                              //   Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (context) {
+                              //       return DupeNowPlayingScreen(au
+                              //         index: index,
+                              //       );
+                              //     },
+                              //   )
+
+                              //       //     builder: (ctx) =>
+                              //       // NOwPlayingScreen(
+                              //       //       realtimePlayingInfos: realtimePlayingInfos,
+                              //       //       index: index,
+                              //       //       assetsAudioPlayer: assetAudioPlayer,
+                              //       //     ),
+                              //       //   ),
+                              //       );
+
+                              leading: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                width: MediaQuery.of(context).size.width * 0.15,
+                                child: Material(
+                                  elevation: 18.0,
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    child: Image.asset(
+                                      'assets/images/playlist-app-icon-button-260nw-1906619590.png',
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // backgroundImage: AssetImage(
+                              //   widget.allAudios[index].metas.image!.path,
+                              // ),
+
+                              //AssetImage(audioList[index].metas.image!.path),
+
+                              title: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  //realtimePlayingInfos.current!.audio.audio.metas.title!,
+                                  playListNamesNotifier.value[index].name,
+
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
+                              trailing: Text(index.toString()));
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding:
+                                EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                            child: Column(
+                              children: [
+                                Divider(
+                                  thickness: 2,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        itemCount: playListNamesNotifier.value.length),
+                  );
+                }),
+          );
+        });
+  }
+
   Widget playlistFavButtons(RealtimePlayingInfos realtimePlayingInfos) {
+    bool favColor = false;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -97,12 +172,25 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              iconBtn(() {
-                // add to user's favorite list
-                //show snack bar when selected the favorite icon
-              }, Icons.favorite),
+              IconButton(
+                onPressed: () {
+                  favoritebtnAction(realtimePlayingInfos.current!.index);
+                  favoriteSnackbar(context: context);
+                  setState(() {
+                    favColor = favorites;
+                  });
+
+                  // add to user's favorite list
+                  //show snack bar when selected the favorite icon
+                },
+                icon: Icon(
+                  Icons.favorite,
+                  color: favColor == true ? Colors.red : Colors.grey,
+                ),
+              ),
               iconBtn(() {
                 //open play list and add user selected list
+                nowPlayerBottomSheetPlaylist(realtimePlayingInfos);
               }, Icons.playlist_add),
               iconBtn(() {
                 Navigator.of(context).pop();
@@ -117,10 +205,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
   Widget title(RealtimePlayingInfos realtimePlayingInfos) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        textMoving(
-            realtimePlayingInfos, context)
-      ],
+      children: [textMoving(realtimePlayingInfos, context)],
     );
   }
 
@@ -163,7 +248,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
       children: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.compare_arrows_rounded),
+          icon: const Icon(Icons.compare_arrows_rounded),
           iconSize: 30,
           color: Colors.white,
           splashColor: Colors.transparent,
@@ -171,7 +256,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
         ),
         IconButton(
           onPressed: () => widget.audioPlayer.previous(),
-          icon: Icon(Icons.fast_rewind_rounded),
+          icon: const Icon(Icons.fast_rewind_rounded),
           iconSize: 30,
           color: Colors.white,
           splashColor: Colors.transparent,
@@ -211,56 +296,59 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenwidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         // title: Text(widget.assetsAudioPlayer!.getCurrentAudioTitle),
-        title: Text('Now Playing'),
+        title: const Text('Now Playing'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      backgroundColor: Color.fromARGB(255, 48, 48, 48),
+      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       body: widget.audioPlayer.builderRealtimePlayingInfos(
           builder: ((context, realtimePlayingInfos) {
         if (realtimePlayingInfos != null) {
-          return Stack(
-            children: [
-              themeBlue(),
-              themePink(),
-              Positioned(
-                left: 20,
-                top: 0,
-                right: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 40,
+          return Scaffold(
+            backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+            body: SizedBox(
+              child: Stack(
+                children: [
+                  themeBlue(),
+                  themePink(),
+                  Positioned(
+                    left: 20,
+                    top: 0,
+                    right: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        audioImage(realtimePlayingInfos),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        playlistFavButtons(realtimePlayingInfos),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        title(realtimePlayingInfos),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        slider(realtimePlayingInfos),
+                        tmeStamp(realtimePlayingInfos),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        playBar(realtimePlayingInfos),
+                      ],
                     ),
-                    audioImage(realtimePlayingInfos),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    playlistFavButtons(realtimePlayingInfos),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    title(realtimePlayingInfos),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    slider(realtimePlayingInfos),
-                    tmeStamp(realtimePlayingInfos),
-                     SizedBox(
-                      height: 10,
-                    ),
-                    playBar(realtimePlayingInfos),
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           );
         } else {
           return Column();
