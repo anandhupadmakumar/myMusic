@@ -18,6 +18,9 @@ import 'home_screen.dart';
 import 'home_screen_duplicate.dart';
 
 List<MusicListData> songlist2 = [];
+List<MusicModel> allSongs = [];
+List<MusicModel> songsFromDb = [];
+List<Audio> finalSongList = [];
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -27,10 +30,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 Map<dynamic, dynamic> a = {};
-List<String> allAudios = [];
+
 List<String> allAudio = [];
 List<String> dbSongs = [];
-List<Audio> finalSongList = [];
+
 List<String> mTitle = [];
 List<String> mPath = [];
 List<String> mArtist = [];
@@ -80,68 +83,68 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  void convertingFromMap(Map value) async {
-    final tempTitle = value['title'] as List<Object?>;
-    log('aaaaaaaaaanandhuannnn $tempTitle');
-    mTitle = tempTitle.map((e) => e.toString()).toList();
-    log("........................${mTitle.length}");
+  // void convertingFromMap(Map value) async {
+  //   final tempTitle = value['title'] as List<Object?>;
+  //   log('aaaaaaaaaanandhuannnn $tempTitle');
+  //   mTitle = tempTitle.map((e) => e.toString()).toList();
+  //   log("........................${mTitle.length}");
 
-    final tempPath = value['path'] as List<Object?>;
-    log('aaaaaaaaaanandhuannnn $tempPath');
-    mPath = tempPath.map((e) => e.toString()).toList();
-    log("........................${mPath.length}");
+  //   final tempPath = value['path'] as List<Object?>;
+  //   log('aaaaaaaaaanandhuannnn $tempPath');
+  //   mPath = tempPath.map((e) => e.toString()).toList();
+  //   log("........................${mPath.length}");
 
-    final tempArtist = value['artist'] as List<Object?>;
-    log('aaaaaaaaaanandhuannnn $tempTitle');
-    mArtist = tempArtist.map((e) => e.toString()).toList();
-    log("........................$mArtist");
-    log("........................${mArtist.length}");
+  //   final tempArtist = value['artist'] as List<Object?>;
+  //   log('aaaaaaaaaanandhuannnn $tempTitle');
+  //   mArtist = tempArtist.map((e) => e.toString()).toList();
+  //   log("........................$mArtist");
+  //   log("........................${mArtist.length}");
 
-    final tempAlbum = value['album'] as List<Object?>;
-    log('aaaaaaaaaanandhuannnn $tempAlbum');
-    malbum = tempAlbum.map((e) => e.toString()).toList();
-    log("..................albumMMMMM......$malbum");
-    log("........................${mArtist.length}");
-    final tempAlbumImage = value['image'] as List<Object?>;
-    log('aaaaaaaaaanandhuannnn $tempTitle');
-    malbumImage = tempAlbumImage.map((e) => e.toString()).toList();
-    log("..........imageeeeeeee..............$malbumImage");
-    log("........................${malbumImage.length}");
-    final mDurationtemp = value['duration'] as List<Object?>;
-    List<String> mDurationtemp2 =
-        mDurationtemp.map((e) => e.toString()).toList();
-    log("........................$malbumImage");
-    log("........................${malbumImage.length}");
-    List<int> durationtemp = mDurationtemp2.map((e) => int.parse(e)).toList();
-    final mIdTemp = value['id'] as List<Object?>;
-    List<String> mId2 = mIdTemp.map((e) => e.toString()).toList();
-    mId = mId2.map((e) => int.parse(e)).toList();
+  //   final tempAlbum = value['album'] as List<Object?>;
+  //   log('aaaaaaaaaanandhuannnn $tempAlbum');
+  //   malbum = tempAlbum.map((e) => e.toString()).toList();
+  //   log("..................albumMMMMM......$malbum");
+  //   log("........................${mArtist.length}");
+  //   final tempAlbumImage = value['image'] as List<Object?>;
+  //   log('aaaaaaaaaanandhuannnn $tempTitle');
+  //   malbumImage = tempAlbumImage.map((e) => e.toString()).toList();
+  //   log("..........imageeeeeeee..............$malbumImage");
+  //   log("........................${malbumImage.length}");
+  //   final mDurationtemp = value['duration'] as List<Object?>;
+  //   List<String> mDurationtemp2 =
+  //       mDurationtemp.map((e) => e.toString()).toList();
+  //   log("........................$malbumImage");
+  //   log("........................${malbumImage.length}");
+  //   List<int> durationtemp = mDurationtemp2.map((e) => int.parse(e)).toList();
+  //   final mIdTemp = value['id'] as List<Object?>;
+  //   List<String> mId2 = mIdTemp.map((e) => e.toString()).toList();
+  //   mId = mId2.map((e) => int.parse(e)).toList();
 
-    for (var i = 0; i < mDurationtemp.length; i++) {
-      String mDuration1 =
-          _printDuration(Duration(milliseconds: durationtemp[i]));
-      mDuration.add(mDuration1);
-    }
-    log('durationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn${mDuration.toString()}');
-    for (int i = 0; i < mPath.length; i++) {
-      final data = MusicModel(
-          id: mId[i],
-          title: mTitle[i],
-          path: mPath[i],
-          album: malbum[i],
-          duration: mDuration[i]);
-      // addMusicList(data);
+  //   for (var i = 0; i < mDurationtemp.length; i++) {
+  //     String mDuration1 =
+  //         _printDuration(Duration(milliseconds: durationtemp[i]));
+  //     mDuration.add(mDuration1);
+  //   }
+  //   log('durationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn${mDuration.toString()}');
+  //   for (int i = 0; i < mPath.length; i++) {
+  //     final data = MusicModel(
+  //         id: mId[i].toString(),
+  //         title: mTitle[i],
+  //         path: mPath[i],
+  //         album: malbum[i],
+  //         duration: mDuration[i]);
+  //     // addMusicList(data);
 
-      await allSongsDb.put(i, data);
-      musicValueNotifier.value.add(data);
-      musicValueNotifier.notifyListeners();
+  //     await allSongsDb.put(i, data);
+  //     musicValueNotifier.value.add(data);
+  //     musicValueNotifier.notifyListeners();
 
-      log('db path >>>>>>>>>>>>>>>>>>>>>>${data.path}');
-      log('db title >>>>>>>>>>>>>>>>>>>>>>${data.title}');
-      log('db album >>>>>>>>>>>>>>>>>>>>>>${data.album}');
-      log('db duration >>>>>>>>>>>>>>>>>>>>>>${data.duration}');
-    }
-  }
+  //     log('db path >>>>>>>>>>>>>>>>>>>>>>${data.path}');
+  //     log('db title >>>>>>>>>>>>>>>>>>>>>>${data.title}');
+  //     log('db album >>>>>>>>>>>>>>>>>>>>>>${data.album}');
+  //     log('db duration >>>>>>>>>>>>>>>>>>>>>>${data.duration}');
+  //   }
+  // }
 
   String _printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -233,6 +236,24 @@ class _SplashScreenState extends State<SplashScreen> {
     songlist2 = songlist.map((e) {
       return MusicListData.fromJson(e);
     }).toList();
+    allSongs = songlist2
+        .map((music) => MusicModel(
+            id: int.parse(music.id!),
+            title: music.title!,
+            path: music.path!,
+            album: music.albums!,
+            duration: music.duration!))
+        .toList();
+    allSongsDb.put('mymusic', allSongs);
+    songsFromDb=allSongsDb.get('mymusic') as List<MusicModel>;
+    
+    for (var element in songsFromDb) {
+      finalSongList.add(Audio.file(element.path,
+          metas: Metas(
+              title: element.title,
+              artist: element.album,
+              id: element.id.toString())));
+    }
 
     log('res3 valueeeeeeeee  ${songlist2[1].duration}');
     // convertingFromMap(audioListFromStorage);
@@ -260,7 +281,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // // addMusicList(data);
     // log('db for data..............??????????????$data');
 
-    await getAllMusicList();
+    // await getAllMusicList();
     //   dbSongs = musicValueNotifier.value[1].path!;
 
     for (var i = 0; i < songlist2.length; i++) {

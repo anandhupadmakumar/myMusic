@@ -11,24 +11,24 @@ ValueNotifier<List<MusicPlayListSongs>> playListSongsNotifier =ValueNotifier([])
 
     
 
-Future<void> addMusicList(MusicModel value) async {
-  final box = await Hive.openBox<MusicModel>('songs_db');
-  await box.put(value.id, value);
-  musicValueNotifier.value.add(value);
+// Future<void> addMusicList(MusicModel value) async {
+//   final box = await Hive.openBox<MusicModel>('songs_db');
+//   await box.put(value.id, value);
+//   musicValueNotifier.value.add(value);
 
 //    musicValueNotifier.value.add(value);
 //   final musicListData = MusicModel(id:id,title: value.title, path: value.path, album: value.album, duration: value.path);
 //  box.put(id, musicListData);
-  log('musiclistlllllllllllllllllllllllllllllllll${value.id} ');
-  musicValueNotifier.notifyListeners();
-}
+//   log('musiclistlllllllllllllllllllllllllllllllll${value.id} ');
+//   musicValueNotifier.notifyListeners();
+// }
 
-Future<void> getAllMusicList() async {
-  final musicListDb = await Hive.openBox<MusicModel>('songs_db');
-  musicValueNotifier.value.clear();
-  musicValueNotifier.value.addAll(musicListDb.values);
+// Future<void> getAllMusicList() async {
+//   final musicListDb = await Hive.openBox<MusicModel>('songs_db');
+//   musicValueNotifier.value.clear();
+//   musicValueNotifier.value.addAll(musicListDb.values);
 
-  //  log('musicgettttttttttttttttttttttttttttttttttttttttttttttt $k');
+//   //  log('musicgettttttttttttttttttttttttttttttttttttttttttttttt $k');
 
-  musicValueNotifier.notifyListeners();
-}
+//   musicValueNotifier.notifyListeners();
+// }

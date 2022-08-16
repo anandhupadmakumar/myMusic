@@ -8,9 +8,11 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:music_sample/screens/splash_screen.dart';
 
 late Box<MusicPlayListNames> playListNamesDb;
-late Box<MusicModel> allSongsDb;
+late Box<List<MusicModel>> allSongsDb;
 late Box<MusicFavorites> favoritesDb;
 late Box<MusicPlayListSongs> playListSongsDb;
+
+late Box<List<int>> favoriteSongsDb;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -20,10 +22,11 @@ Future<void> main() async {
   Hive.registerAdapter(MusicFavoritesAdapter());
   Hive.registerAdapter(MusicPlayListSongsAdapter());
 
-  allSongsDb = await Hive.openBox('songs_db');
+  allSongsDb = await Hive.openBox('songs_db1');
   playListNamesDb = await Hive.openBox('playlist_namesdb');
   favoritesDb = await Hive.openBox('favorite_db');
-  playListSongsDb = await Hive.openBox('playlists_musicsss_db') ;
+  playListSongsDb = await Hive.openBox('playlists_musicsss_db');
+  favoriteSongsDb = await Hive.openBox('favorites_songs_db');
 
   //}
   // await Hive.openBox<MusicModel>('music_db');

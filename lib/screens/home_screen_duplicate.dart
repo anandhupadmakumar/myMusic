@@ -16,6 +16,8 @@ import '../widgets/navigation_drawer.dart';
 import '../widgets/theme_color.dart';
 import 'splash_screen.dart';
 
+List<int> favoriteSongsIdDb = [];
+
 List<String> playListNames = [];
 bool favorites = false;
 bool playlistvalidation = false;
@@ -214,11 +216,10 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(
-                                                width: 100,
+                                                width: 200,
                                                 child: Text(
                                                   //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                                                  musicValueNotifier
-                                                      .value[index].title,
+                                                  songsFromDb[index].title,
 
                                                   style: TextStyle(
                                                       color: Colors.white,
@@ -229,9 +230,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                               IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    setState(() {
-                                                      fav = favorites;
-                                                    });
+                                                    fav = favorites;
 
                                                     favoritebtnAction(index);
 
@@ -239,7 +238,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                                         context: context);
                                                   });
                                                 },
-                                                icon: fav == true
+                                                icon: fav == false
                                                     ? Icon(Icons.favorite,
                                                         key: Key(
                                                             'icon key $index'),
@@ -254,14 +253,19 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              musicValueNotifier
-                                                  .value[index].album,
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                            SizedBox(
+                                              width: 100,
+                                              child: Text(
+                                                //realtimePlayingInfos.current!.audio.audio.metas.title!,
+                                                songsFromDb[index].album,
+
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
                                             ),
-                                            Text(musicValueNotifier
-                                                .value[index].duration)
+                                            Text(songsFromDb[index].duration)
                                           ],
                                         ),
 
@@ -279,7 +283,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                         ),
                                       );
                                     },
-                                    itemCount: finalSongList.length);
+                                    itemCount: songsFromDb.length);
                               }),
                         ),
 
@@ -602,8 +606,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                                 bottom: 10),
                                             child: Text(
                                               //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                                              favoriteListNotifier
-                                                  .value[index].title,
+                                              songsFromDb[index].title,
 
                                               style: TextStyle(
                                                   color: Colors.white,
@@ -627,7 +630,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                         ),
                                       );
                                     },
-                                    itemCount: value.length);
+                                    itemCount: favoriteSongsIdDb.length);
                               }),
                         ),
 
@@ -779,7 +782,6 @@ void playlistNameEdit(context, index) {
                           .get(playListSongsNotifier.value[index].names);
                       playlistsongstempedit!.names =
                           playListNamesController.text;
-                      
 
                       final playlistData = MusicPlayListNames(
                           id: index, name: playListNamesController.text);
@@ -823,29 +825,30 @@ favoriteSnackbar({
         'Song added ',
       ),
     );
-    favorites = true;
   }
   ScaffoldMessenger.of(context).showSnackBar(showsnackbar);
 }
 
 void favoritebtnAction(index) {
-  List<MusicFavorites> result = favoriteListNotifier.value
-      .where(
-          (checking) => checking.path == musicValueNotifier.value[index].path)
-      .toList();
-  if (result.isEmpty) {
-    final favoritedata = MusicFavorites(
-        id: index,
-        path: musicValueNotifier.value[index].path,
-        album: musicValueNotifier.value[index].album,
-        title: musicValueNotifier.value[index].title,
-        duration: musicValueNotifier.value[index].duration);
-    favoritesDb.add(favoritedata);
-    favoriteListNotifier.value.add(favoritedata);
+  List<int> result =
+      favoriteSongsIdDb.where((element) => element == songsFromDb[index].id).toList();
 
-    favoriteListNotifier.notifyListeners();
+  if (result.isEmpty) {
+    // final favoritedata = MusicFavorites(
+    //     id: songsFromDb[index].id,
+    //     path: songsFromDb[index].path,
+    //     album: songsFromDb[index].album,
+    //     title: songsFromDb[index].title,
+    //     duration: songsFromDb[index].duration);
+    // favoritesDb.add(favoritedata);
+    // favoriteListNotifier.value.add(favoritedata);
+    favoriteSongsIdDb.add(songsFromDb[index].id!);
+    favoriteSongsDb.put('favorites', favoriteSongsIdDb);
+    favoriteSongsIdDb = favoriteSongsDb.get('favorites') as List<int>;
+    log(favoriteSongsIdDb.toString());
 
     log(result.toString());
+    favorites = false;
   } else {
     favorites = true;
   }
