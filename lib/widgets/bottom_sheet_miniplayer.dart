@@ -5,7 +5,7 @@ import 'package:marquee/marquee.dart';
 import 'package:music_sample/screens/now_playing_screen_duplicate.dart';
 import 'package:music_sample/widgets/iconbtn_widget.dart';
 
-Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, int? index}) {
+Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
   final mpwidth = MediaQuery.of(context).size.width;
   final mpheight = MediaQuery.of(context).size.width;
 
@@ -18,7 +18,7 @@ Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, int? in
               MaterialPageRoute(
                 builder: (ctx) => DupeNowPlayingScreen(
                   audioPlayer: audioPlayer,
-                  index: index,
+                  
                 ),
               ),
             );

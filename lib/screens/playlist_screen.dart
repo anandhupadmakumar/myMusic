@@ -89,8 +89,7 @@ class PlayListScreen extends StatelessWidget {
                                               MaterialPageRoute(
                                                   builder: (ctx) =>
                                                       FavoriteScreen(
-                                                        assetaudioPlayer:
-                                                            assetsaudioPlayer,audiolist: audioLists,
+                                                       
                                                       )));
                                         },
                                         child: CircleAvatar(

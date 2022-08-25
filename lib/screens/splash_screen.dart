@@ -29,18 +29,18 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-Map<dynamic, dynamic> a = {};
 
-List<String> allAudio = [];
-List<String> dbSongs = [];
 
-List<String> mTitle = [];
-List<String> mPath = [];
-List<String> mArtist = [];
-List<String> malbum = [];
-List<String> malbumImage = [];
-List<String> mDuration = [];
-List<int> mId = [];
+// List<String> allAudio = [];
+// List<String> dbSongs = [];
+
+// List<String> mTitle = [];
+// List<String> mPath = [];
+// List<String> mArtist = [];
+// List<String> malbum = [];
+// List<String> malbumImage = [];
+// List<String> mDuration = [];
+// List<int> mId = [];
 
 class _SplashScreenState extends State<SplashScreen> {
   List<String>? allAudios;
@@ -242,13 +242,13 @@ class _SplashScreenState extends State<SplashScreen> {
             title: music.title!,
             path: music.path!,
             album: music.albums!,
-            duration: music.duration!))
+            duration:_printDuration(Duration( milliseconds:int.parse(music.duration.toString())) ) ))
         .toList();
-    allSongsDb.put('mymusic', allSongs);
-    songsFromDb=allSongsDb.get('mymusic') as List<MusicModel>;
+    box.put('mymusic', allSongs);
+    songsFromDb=box.get('mymusic') as List<MusicModel>;
     
     for (var element in songsFromDb) {
-      finalSongList.add(Audio.file(element.path,
+      finalSongList.add(Audio.file(element.path!,
           metas: Metas(
               title: element.title,
               artist: element.album,
@@ -284,14 +284,15 @@ class _SplashScreenState extends State<SplashScreen> {
     // await getAllMusicList();
     //   dbSongs = musicValueNotifier.value[1].path!;
 
-    for (var i = 0; i < songlist2.length; i++) {
-      finalSongList.add(Audio.file(songlist2[i].path!,
-          metas: Metas(
-            title: songlist2[i].title,
-            artist: songlist2[i].albums,
-          )));
-      log('inside for loop ................${finalSongList.toString()}');
-    }
+    // for (var i = 0; i < songsFromDb.length; i++) {
+    //   finalSongList.add(Audio.file(songsFromDb[i].path!,
+    //       metas: Metas(
+    //         title: songsFromDb[i].title,
+    //         artist: songsFromDb[i].album,
+             
+    //       )));
+    //   log('inside for loop ................${finalSongList.toString()}');
+    // }
 
     //   log('allvideos ${dbSongs.toString()}');
     //   // log('an${a.toString()}');

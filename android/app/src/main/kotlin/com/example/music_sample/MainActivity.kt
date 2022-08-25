@@ -102,12 +102,12 @@ class MainActivity: FlutterActivity() {
             if (cursor.moveToFirst())
                 do {
                     val titleC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
-                    var idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.`_ID`))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))?:"Unknown"
+                    var idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.`_ID`))?:"Unknown"
                     val albumC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))?:"Unknown"
                     val artistC =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))?:"Unknown"
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                     val durationC =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
