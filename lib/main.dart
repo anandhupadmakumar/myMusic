@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_sample/db_functions/music_modal_class.dart';
-import 'package:music_sample/screens/home_screen_duplicate.dart';
-import 'package:music_sample/screens/now_playing_screen_duplicate.dart';
+import 'package:heza/db_functions/music_modal_class.dart';
+import 'package:heza/screens/home_screen_duplicate.dart';
+import 'package:heza/screens/now_playing_screen_duplicate.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'package:music_sample/screens/splash_screen.dart';
+import 'package:heza/screens/splash_screen.dart';
 final Box<List<dynamic>> box = StorageBox.getInstance();
 
 
@@ -57,11 +58,30 @@ class Music extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-      //DupeNowPlayingScreen(),
-      //
+    return ScreenUtilInit(
+       splitScreenMode: false,
+      minTextAdapt: true,
+      useInheritedMediaQuery: true,
+     designSize:const Size( 392.72727272727275, 781.0909090909091),
+        builder: (
+        BuildContext context,
+        Widget? child,
+      ) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+         
+         
+          home: const SplashScreen(),
+        );
+      },
+
+
+      // child: MaterialApp(
+      //   debugShowCheckedModeBanner: false,
+      //   home: SplashScreen(),
+      //   //DupeNowPlayingScreen(),
+      //   //
+      // ),
     );
   }
 }

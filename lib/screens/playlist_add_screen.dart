@@ -1,7 +1,8 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:music_sample/screens/home_screen_duplicate.dart';
-import 'package:music_sample/screens/splash_screen.dart';
+import 'package:heza/screens/home_screen_duplicate.dart';
+import 'package:heza/screens/splash_screen.dart';
 
 import '../db_functions/db_crud_function.dart';
 import '../db_functions/music_modal_class.dart';
@@ -76,7 +77,7 @@ class _MyPlaylistScreenState extends State<MyPlaylistScreen> {
               child: ValueListenableBuilder(
                   valueListenable: box.listenable(),
                   builder: (BuildContext context, value, Widget? _) {
-                    finalSongListPlaylist =
+                    List<Audio> songPlaylist =
                         playlistAudiolist(key: playListNames[widget.index]);
 
                     final playlistSongIdList =
@@ -92,16 +93,24 @@ class _MyPlaylistScreenState extends State<MyPlaylistScreen> {
                                 padding: const EdgeInsets.all(15.0),
                                 child: ListTile(
                                     onTap: () async {
-                                     
-                                      await play(audioPlayer,
-                                          playlistAudioSongs, index);
-                                      await audioPlayer
-                                          .playlistPlayAtIndex(index);
+                                      if (songsSkip) {
+                                        songsSkip = false;
+
+                                        songPlaylist.clear();
+                                        await play(
+                                            assetsaudioPlayer: audioPlayer,
+                                            audioSongs: songPlaylist =
+                                                playlistAudiolist(
+                                                    key: playListNames[
+                                                        widget.index]),
+                                            index: index);
+                                        await audioPlayer
+                                            .playlistPlayAtIndex(index);
+                                        songsSkip = true;
+                                      }
                                     },
-                                    onLongPress: () => 
-                                          deletePopupPlaylistSongs(
-                                              context, index, widget.index)
-                                        ,
+                                    onLongPress: () => deletePopupPlaylistSongs(
+                                        context, index, widget.index),
                                     leading: CircleAvatar(
                                       maxRadius: 30,
                                       backgroundImage: const AssetImage(

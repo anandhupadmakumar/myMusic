@@ -1,8 +1,8 @@
 
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:music_sample/db_functions/music_modal_class.dart';
-import 'package:music_sample/screens/home_screen_duplicate.dart';
+import 'package:heza/db_functions/music_modal_class.dart';
+import 'package:heza/screens/home_screen_duplicate.dart';
 
 
 List<Audio>allAudioSongsFromLists=[];

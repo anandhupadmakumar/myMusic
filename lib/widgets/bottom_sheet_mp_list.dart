@@ -4,10 +4,10 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:music_sample/main.dart';
-import 'package:music_sample/screens/home_screen_duplicate.dart';
-import 'package:music_sample/screens/playlist_add_screen.dart';
-import 'package:music_sample/screens/playlist_name_screen.dart';
+import 'package:heza/main.dart';
+import 'package:heza/screens/home_screen_duplicate.dart';
+import 'package:heza/screens/playlist_add_screen.dart';
+import 'package:heza/screens/playlist_name_screen.dart';
 import 'package:path/path.dart';
 
 import '../db_functions/db_crud_function.dart';

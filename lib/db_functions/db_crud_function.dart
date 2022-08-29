@@ -4,9 +4,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:music_sample/db_functions/music_modal_class.dart';
+import 'package:heza/db_functions/music_modal_class.dart';
 
-import 'package:music_sample/screens/home_screen_duplicate.dart';
+import 'package:heza/screens/home_screen_duplicate.dart';
 
 import '../main.dart';
 import '../screens/playlist_name_screen.dart';
@@ -30,9 +30,6 @@ favoriteIdAdd(int homeScreenId, index) async {
     await box.put('favourites', favoriteIdList);
     favoriteIdList = box.get('favourites') as List<dynamic>;
 
-    favoriteIdList.sort(
-      (b, a) => a.compareTo(b),
-    );
     favoriteIdList.sort(
       (b, a) => a.compareTo(b),
     );
@@ -93,12 +90,16 @@ List<Audio> favoriteAudioList() {
   //       )));
   // }
   // log("inside function song${finalFavoriteAudioSongs[1].path}");
- 
 
   return finalFavoriteAudioSongs;
 }
 
 playlistSongIdAdd(index, playListSongsid, key) async {
+  final a = box.get(key);
+  if (a == null) {
+    box.put(key, playlistSongIdList = []);
+  }
+  playlistSongIdList = box.get(key) as List;
   final result = playlistSongIdList
       .where((element) => element == songsFromDb[index].id)
       .toList();
@@ -118,7 +119,7 @@ playlistSongIdAdd(index, playListSongsid, key) async {
   }
 }
 
-List<MusicModel> playlistAudiolist({required key}) {
+List<Audio> playlistAudiolist({required key}) {
   final playlistSongIdList = box.get(key);
 
   if (playlistSongIdList != null) {
@@ -133,7 +134,7 @@ List<MusicModel> playlistAudiolist({required key}) {
           )));
     }
   }
-  return finalSongListPlaylist;
+  return playlistAudioSongs;
 }
 
 void playlistNameEdit(context, index, playlistNameEdit) {
@@ -220,14 +221,29 @@ void deletePopupFavorite(context, index) {
                   box.put('favourites', favoriteIdList);
                   finalFavoriteAudioSongs.clear();
                   finalFavoriteAudioSongs = favoriteAudioList();
+
                   // audioPlayer.playlistAudioFinished.listen((event) async {
                   //   event.audio.audio.currentlyOpenedIn.;
                   //   await play(audioPlayer, finalFavoriteAudioSongs, index);
 
                   // });
-                  if (audioPlayer.playerState.hasValue) {
-                    await play(audioPlayer, finalFavoriteAudioSongs, index);
-                  }
+                  // if (audioPlayer.playerState.hasValue) {
+
+                  // }
+                 
+                 
+                    play(
+                        assetsaudioPlayer: audioPlayer,
+                        audioSongs: finalFavoriteAudioSongs,
+                        index: index);
+                    
+   
+
+                  // await play(
+                  //     assetsaudioPlayer: audioPlayer,
+                  //     audioSongs: finalFavoriteAudioSongs,
+                  //     index: index);
+                  // audioPlayer.play();
 
                   Navigator.of(context).pop();
                 },
@@ -280,6 +296,9 @@ void deletePopupPlaylistSongs(context, index, playlistNameIndex) {
                 onPressed: () {
                   print('data');
                   playListSongIdList.removeAt(index);
+                  playlistAudioSongs =
+                      playlistAudiolist(key: playlistNames[playlistNameIndex]);
+                  playlistAudioSongs.removeAt(index);
                   box.put(playlistNames[playlistNameIndex], playListSongIdList);
                   playlistSongIdList = box.get(playlistNames[playlistNameIndex])
                       as List<dynamic>;

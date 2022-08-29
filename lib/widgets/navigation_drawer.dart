@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import 'package:music_sample/play_operations/play_pause.dart';
-import 'package:music_sample/screens/home_screen.dart';
+import 'package:heza/play_operations/play_pause.dart';
+import 'package:heza/screens/home_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:share_plus/share_plus.dart';
@@ -358,7 +358,6 @@ Widget drawerHome(context, value) {
           ),
           ListTile(
             onTap: () {
-              
               //exit from the app
             },
             leading: Icon(

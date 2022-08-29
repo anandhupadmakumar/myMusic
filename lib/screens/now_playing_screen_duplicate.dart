@@ -2,16 +2,17 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:marquee/marquee.dart';
-import 'package:music_sample/db_functions/db_crud_function.dart';
-import 'package:music_sample/db_functions/music_modal_class.dart';
-import 'package:music_sample/main.dart';
-import 'package:music_sample/screens/playlist_name_screen.dart';
-import 'package:music_sample/screens/splash_screen.dart';
+import 'package:heza/db_functions/db_crud_function.dart';
+import 'package:heza/db_functions/music_modal_class.dart';
+import 'package:heza/main.dart';
+import 'package:heza/screens/playlist_name_screen.dart';
+import 'package:heza/screens/splash_screen.dart';
 
-import 'package:music_sample/widgets/bottom_sheet_miniplayer.dart';
+import 'package:heza/widgets/bottom_sheet_miniplayer.dart';
 
 import '../widgets/bottom_sheet_mp_list.dart';
 import '../widgets/iconbtn_widget.dart';
@@ -19,6 +20,7 @@ import '../widgets/realtimeinfo_slider.dart';
 import '../widgets/theme_color.dart';
 import '../widgets/timetext_slider.dart';
 import 'home_screen_duplicate.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 
 class DupeNowPlayingScreen extends StatefulWidget {
   final index;
@@ -33,20 +35,43 @@ class DupeNowPlayingScreen extends StatefulWidget {
 class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
   bool playingLoop = false;
 
-  
   Widget audioImage(RealtimePlayingInfos realtimePlayingInfos) {
-    return const Padding(
-      padding:  EdgeInsets.only(top: 40),
-      child:  CircleAvatar(
-        radius: 120,
-        backgroundColor: Color.fromARGB(0, 48, 207, 228),
-        backgroundImage:
-            // AssetImage(realtimePlayingInfos
-            //     .current!.audio.audio.metas.image!.path)
-            AssetImage(
-          'assets/images/now_playing-mp3.png',
+    return Padding(
+      padding: EdgeInsets.only(top: 40),
+      child: AvatarGlow(
+        glowColor: Colors.blue,
+        endRadius: 90.0,
+        duration: Duration(milliseconds: 2000),
+        repeat: true,
+        showTwoGlows: true,
+        repeatPauseDuration: Duration(milliseconds: 100),
+        child: Material(
+          // Replace this child with your own
+          elevation: 8.0,
+          shape: CircleBorder(),
+          child: CircleAvatar(
+            backgroundColor: Colors.grey[100],
+            child: Image.asset(
+              'assets/images/now_playing-mp3.png',
+              height: 199,
+            ),
+            radius: 100.0,
+          ),
         ),
       ),
+      // child:  AvatarGlow(
+
+      //   child: CircleAvatar(
+      //     radius: 120.r,
+      //     backgroundColor: Color.fromARGB(0, 48, 207, 228),
+      //     backgroundImage:
+      //         // AssetImage(realtimePlayingInfos
+      //         //     .current!.audio.audio.metas.image!.path)
+      //         AssetImage(
+      //       'assets/images/now_playing-mp3.png',
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -108,9 +133,9 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
                             child: Material(
                               elevation: 18.0,
                               color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(50.0),
+                              borderRadius: BorderRadius.circular(50.0).r,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.0),
+                                borderRadius: BorderRadius.circular(50.0).r,
                                 child: Image.asset(
                                   'assets/images/playlist-app-icon-button-260nw-1906619590.png',
                                   fit: BoxFit.cover,
@@ -179,19 +204,19 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
           Container(
             // margin: EdgeInsets.only(left: 10),
             width: MediaQuery.of(context).size.width,
-            height: 20,
+            height: 20.h,
             child: Marquee(
               text: realtimePlayingInfos.current!.audio.audio.metas.title!,
               pauseAfterRound: Duration(seconds: 0),
               velocity: 5,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Colors.white, fontSize: 20.sp),
               blankSpace: 30,
               crossAxisAlignment: CrossAxisAlignment.start,
               // text: realtimePlayingInfos.current!.audio.audio.metas.title!,
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 20.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,7 +322,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
             }
           },
           icon: playingLoop ? Icon(Icons.repeat_one) : Icon(Icons.repeat),
-          iconSize: 30,
+          iconSize: 30.sp,
           color: Colors.white,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -305,7 +330,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
         IconButton(
           onPressed: () => widget.audioPlayer.previous(),
           icon: const Icon(Icons.fast_rewind_rounded),
-          iconSize: 30,
+          iconSize: 30.sp,
           color: Colors.white,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -317,7 +342,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
           icon: Icon(realtimePlayingInfos.isPlaying
               ? Icons.pause_circle_filled_rounded
               : Icons.play_circle_fill_rounded),
-          iconSize: 70,
+          iconSize: 70.sp,
           color: Color.fromARGB(255, 5, 237, 237),
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -325,7 +350,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
         IconButton(
           onPressed: () => widget.audioPlayer.next(),
           icon: Icon(Icons.fast_forward_rounded),
-          iconSize: 30,
+          iconSize: 30.sp,
           color: Colors.white,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -335,7 +360,7 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
             playlistNowPlayingScreen(context);
           },
           icon: Icon(Icons.playlist_play),
-          iconSize: 30,
+          iconSize: 30.sp,
           color: Colors.white,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
@@ -369,31 +394,34 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
                     left: 20,
                     top: 0,
                     right: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // const SizedBox(
-                        //   height: 40,
-                        // ),
-                        audioImage(realtimePlayingInfos),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        playlistFavButtons(realtimePlayingInfos),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        title(realtimePlayingInfos),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        slider(realtimePlayingInfos),
-                        tmeStamp(realtimePlayingInfos),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        playBar(realtimePlayingInfos),
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // const SizedBox(
+                          //   height: 40,
+                          // ),
+                          audioImage(realtimePlayingInfos),
+
+                          SizedBox(
+                            height: 50.h,
+                          ),
+                          playlistFavButtons(realtimePlayingInfos),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          title(realtimePlayingInfos),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          slider(realtimePlayingInfos),
+                          tmeStamp(realtimePlayingInfos),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          playBar(realtimePlayingInfos),
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -424,7 +452,7 @@ playlistNowPlayingScreen(context) {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: (() async {
-                          await play(audioPlayer, finalSongList, index);
+                          await play(assetsaudioPlayer:audioPlayer, audioSongs:finalSongList,index: index);
                           await audioPlayer.playlistPlayAtIndex(index);
                         }),
                         // onTap: () {
@@ -455,7 +483,7 @@ playlistNowPlayingScreen(context) {
                         //   //       );
                         // },
                         leading: CircleAvatar(
-                          maxRadius: 30,
+                          maxRadius: 30.r,
 
                           backgroundImage:
                               AssetImage('assets/images/music logomp3.jpg'),
@@ -485,7 +513,7 @@ playlistNowPlayingScreen(context) {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: 200,
+                                width: 200.w,
                                 child: Text(
                                   //realtimePlayingInfos.current!.audio.audio.metas.title!,
                                   songsFromDb[index].title!,
@@ -502,7 +530,7 @@ playlistNowPlayingScreen(context) {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: 100,
+                              width: 100.w,
                               child: Text(
                                 //realtimePlayingInfos.current!.audio.audio.metas.title!,
                                 songsFromDb[index].album!,

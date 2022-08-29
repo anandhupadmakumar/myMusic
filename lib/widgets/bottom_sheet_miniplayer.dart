@@ -1,11 +1,20 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:marquee/marquee.dart';
 
-import 'package:music_sample/screens/now_playing_screen_duplicate.dart';
-import 'package:music_sample/widgets/iconbtn_widget.dart';
+import 'package:heza/screens/now_playing_screen_duplicate.dart';
+import 'package:heza/widgets/iconbtn_widget.dart';
 
-Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
+import '../db_functions/db_crud_function.dart';
+import '../screens/home_screen_duplicate.dart';
+
+bool songsSkip = true;
+
+Widget bottomMiniPlayer({
+  context,
+  required AssetsAudioPlayer audioPlayer,
+}) {
   final mpwidth = MediaQuery.of(context).size.width;
   final mpheight = MediaQuery.of(context).size.width;
 
@@ -18,7 +27,6 @@ Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
               MaterialPageRoute(
                 builder: (ctx) => DupeNowPlayingScreen(
                   audioPlayer: audioPlayer,
-                  
                 ),
               ),
             );
@@ -36,7 +44,7 @@ Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          radius: 25,
+                          radius: 25.r,
                           backgroundColor: Color.fromARGB(255, 0, 94, 172),
                           backgroundImage:
                               AssetImage('assets/images/music logomp3.jpg'),
@@ -52,9 +60,18 @@ Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
                             // ),
                           ],
                         ),
-                        iconBtn(() {
-                          audioPlayer.previous();
-                        }, Icons.skip_previous),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            if (songsSkip) {
+                              songsSkip = false;
+                              await audioPlayer.previous();
+
+                              songsSkip = true;
+                            }
+                          },
+                          child: Icon(Icons.skip_previous),
+                        ),
                         IconButton(
                           onPressed: () {
                             audioPlayer.playOrPause();
@@ -67,9 +84,18 @@ Widget bottomMiniPlayer({context,required AssetsAudioPlayer audioPlayer, }) {
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                         ),
-                        iconBtn(() {
-                          audioPlayer.next();
-                        }, Icons.skip_next),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            if (songsSkip) {
+                              songsSkip = false;
+                              await audioPlayer.next();
+
+                              songsSkip = true;
+                            }
+                          },
+                          child: const Icon(Icons.skip_next),
+                        ),
                       ]),
                 ),
               ],

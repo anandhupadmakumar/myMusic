@@ -2,18 +2,20 @@ import 'dart:developer';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'package:music_sample/db_functions/db_crud_function.dart';
-import 'package:music_sample/screens/splash_screen.dart';
+import 'package:heza/db_functions/db_crud_function.dart';
+import 'package:heza/screens/splash_screen.dart';
+import 'package:heza/widgets/bottom_sheet_miniplayer.dart';
 
-import 'package:music_sample/widgets/theme_color.dart';
+import 'package:heza/widgets/theme_color.dart';
 
-import '../db_functions/music_modal_class.dart';
-import '../db_functions/playfunction.dart';
+
+
 import '../main.dart';
 import '../widgets/bottom_sheet_mp_list.dart';
-import '../widgets/realtime_listview.dart';
+
 import 'home_screen_duplicate.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -64,11 +66,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       )),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.add,
-                          color: Color.fromARGB(255, 232, 74, 6),
-                          size: 40,
+                          color: const Color.fromARGB(255, 232, 74, 6),
+                          size: 40.sp,
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),
@@ -76,7 +78,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             'Add songs',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -101,24 +103,30 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       List<Audio> FavoriteAudioSongs = favoriteAudioList();
 
                       return favouritesSongs!.isEmpty
-                          ? SizedBox(
-                              child: Text('no songs found'),
+                          ?const Center(
+                              child: SizedBox(
+                                child: Text('no songs found'),
+                              ),
                             )
                           : ListView.separated(
                               itemBuilder: (context, index) {
                                 return ListTile(
                                     onTap: () async {
-                                      FavoriteAudioSongs.clear();
-                                      log(index.toString());
-                                      await play(
-                                          audioPlayer,
-                                          FavoriteAudioSongs =
-                                              favoriteAudioList(),
-                                          index);
-                                      log(FavoriteAudioSongs.toString());
+                                      if (songsSkip) {
+                                        songsSkip = false;
+                                        FavoriteAudioSongs.clear();
+                                        log(index.toString());
+                                        await play(
+                                            assetsaudioPlayer: audioPlayer,
+                                            audioSongs: FavoriteAudioSongs =
+                                                favoriteAudioList(),
+                                            index: index);
+                                        log(FavoriteAudioSongs.toString());
 
-                                      await audioPlayer
-                                          .playlistPlayAtIndex(index);
+                                        await audioPlayer
+                                            .playlistPlayAtIndex(index);
+                                        songsSkip = true;
+                                      }
                                     },
                                     onLongPress: () {
                                       deletePopupFavorite(context, index);
@@ -126,7 +134,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                       favorites = false;
                                     },
                                     leading: CircleAvatar(
-                                      maxRadius: 30,
+                                      maxRadius: 30.r,
                                       backgroundImage: const AssetImage(
                                           'assets/images/music logomp3.jpg'),
                                       child: Container(
@@ -216,31 +224,7 @@ Future<void> nowPlayerBottomSheetPlaylist(favoritesongId, context) async {
                               playlistNames[index]);
                           // playlistAudiolist(key:  playlistNames[index]);
                         },
-                        // onLongPress: () => setState(() {
-                        //   playlistNames.removeAt(index);
-                        //   box.put('playlist_name', playlistNames);
-
-                        //   //playlist names deleting fun
-                        // }),
-
-                        // playMusic(index: index, assetsAudioplayer: assetAudioPlayer);
-
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) {
-                        //       return DupeNowPlayingScreen(au
-                        //         index: index,
-                        //       );
-                        //     },
-                        //   )
-
-                        //       //     builder: (ctx) =>
-                        //       // NOwPlayingScreen(
-                        //       //       realtimePlayingInfos: realtimePlayingInfos,
-                        //       //       index: index,
-                        //       //       assetsAudioPlayer: assetAudioPlayer,
-                        //       //     ),
-                        //       //   ),
-                        //       );
+                       
 
                         leading: Container(
                           height: MediaQuery.of(context).size.height * 0.1,
@@ -260,26 +244,7 @@ Future<void> nowPlayerBottomSheetPlaylist(favoritesongId, context) async {
                           ),
                         ),
 
-                        // backgroundImage: AssetImage(
-                        //   widget.allAudios[index].metas.image!.path,
-                        // ),
-
-                        //AssetImage(audioList[index].metas.image!.path),
-
-                        // title: Padding(
-                        //   padding:
-                        //       const EdgeInsets.only(bottom: 10),
-                        //   child: Text(
-                        //     //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                        //     // playListNamesNotifier
-                        //     //     .value[index].name,
-
-                        //     style: const TextStyle(
-                        //         color: Colors.white,
-                        //         overflow:
-                        //             TextOverflow.ellipsis),
-                        //   ),
-                        // ),
+                      
                         title: Text(
                           playlistNames[index],
                           style: const TextStyle(color: Colors.white),

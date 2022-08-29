@@ -1,16 +1,16 @@
-import 'dart:developer';
+
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+
 import 'package:hive_flutter/adapters.dart';
-import 'package:music_sample/main.dart';
-import 'package:music_sample/screens/playlist_add_screen.dart';
-import 'package:music_sample/screens/playlist_name_screen.dart';
-import 'package:music_sample/widgets/bottom_sheet_mp_list.dart';
-import 'package:music_sample/widgets/iconbtn_widget.dart';
+import 'package:heza/main.dart';
+
+import 'package:heza/screens/playlist_name_screen.dart';
+
 
 import '../db_functions/db_crud_function.dart';
 import '../db_functions/music_modal_class.dart';
@@ -26,15 +26,18 @@ bool? notification;
 bool favorites = false;
 bool playlistvalidation = false;
 final audioPlayer = AssetsAudioPlayer();
-Future<void> play(AssetsAudioPlayer assetsaudioPlayer, List<Audio> audioSongs,
-    int index) async {
+Future<void> play(
+    {required AssetsAudioPlayer assetsaudioPlayer,
+    required List<Audio> audioSongs,
+    int? index}) async {
   await assetsaudioPlayer.open(
-    Playlist(audios: audioSongs, startIndex: index),
+    Playlist(audios: audioSongs, startIndex: index!),
     showNotification:
         notification == null || notification == true ? true : false,
     autoStart: false,
     loopMode: LoopMode.playlist,
-    // playInBackground: PlayInBackground.disabledRestoreOnForeground,
+    respectSilentMode: false,
+    playInBackground: PlayInBackground.disabledPause,
     // audioFocusStrategy:const AudioFocusStrategy.request(resumeAfterInterruption: true),
 
     notificationSettings: const NotificationSettings(stopEnabled: false),
@@ -52,7 +55,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
     with TickerProviderStateMixin {
   @override
   void initState() {
-     favoriteAudioList();
+    favoriteAudioList();
     // favoriteAudioList();
 
     // TODO: implement initState
@@ -113,8 +116,8 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                       elevation: 0.0,
                       pinned: true,
                       floating: true,
-                      expandedHeight: 150,
-                      title: const Text('MUSIC'),
+                      expandedHeight: 150.h,
+                      title: const Text('HEZA '),
                       centerTitle: true,
                       bottom: const TabBar(tabs: [
                         Tab(
@@ -151,40 +154,22 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                     itemBuilder: (context, index) {
                                       return ListTile(
                                         onTap: (() async {
-                                          await play(audioPlayer, finalSongList,
-                                              index);
-                                          await audioPlayer
-                                              .playlistPlayAtIndex(index);
+                                          if (songsSkip) {
+                                            songsSkip = false;
+
+                                            await play(
+                                                assetsaudioPlayer: audioPlayer,
+                                                audioSongs: finalSongList,
+                                                index: index);
+
+                                            await audioPlayer
+                                                .playlistPlayAtIndex(index);
+                                            songsSkip = true;
+                                          }
                                         }),
-                                        // onTap: () {
-                                        //   // if (audioPlayer.current.value !=
-                                        //   //     null) {
-                                        //   //   audioPlayer.stop();
-                                        //   // }else{
-                                        //   audioPlayer
-                                        //       .playlistPlayAtIndex(index);
-
-                                        //   // playMusic(index: index, assetsAudioplayer: assetAudioPlayer);
-
-                                        //   //   Navigator.of(context).push(MaterialPageRoute(
-                                        //   //     builder: (context) {
-                                        //   //       return DupeNowPlayingScreen(au
-                                        //   //         index: index,
-                                        //   //       );
-                                        //   //     },
-                                        //   //   )
-
-                                        //   //       //     builder: (ctx) =>
-                                        //   //       // NOwPlayingScreen(
-                                        //   //       //       realtimePlayingInfos: realtimePlayingInfos,
-                                        //   //       //       index: index,
-                                        //   //       //       assetsAudioPlayer: assetAudioPlayer,
-                                        //   //       //     ),
-                                        //   //       //   ),
-                                        //   //       );
-                                        // },
+                                       
                                         leading: CircleAvatar(
-                                          maxRadius: 30,
+                                          maxRadius: 30.r,
 
                                           backgroundImage: const AssetImage(
                                               'assets/images/music logomp3.jpg'),
@@ -214,7 +199,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             SizedBox(
-                                              width: 100,
+                                              width: 100.w,
                                               child: Text(
                                                 //realtimePlayingInfos.current!.audio.audio.metas.title!,
                                                 songsFromDb[index].title!,
@@ -272,7 +257,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             SizedBox(
-                                              width: 100,
+                                              width: 100.w,
                                               child: Text(
                                                 //realtimePlayingInfos.current!.audio.audio.metas.title!,
                                                 songsFromDb[index].album!,
@@ -304,698 +289,25 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                         //  HomeListView(assetsAudioplayer: assetsaudioPlayer,),
                       ),
 
-                      // Positioned(
-                      //   top: 40.0,
-                      //   child: SizedBox(
-                      //       width: MediaQuery.of(context).size.width * 1,
-                      //       child: Row(
-                      //         mainAxisSize: MainAxisSize.max,
-                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //         children: [
-                      //           iconBtn(() {}, Icons.refresh_outlined),
-                      //           iconBtn(() {
-                      //             // Navigator.of(context).push(MaterialPageRoute(
-                      //             //     builder: (ctx) => FavoriteScreen(
-                      //             //           assetaudioPlayer: audioPlayer,
-                      //             //           audiolist: widget.allAudios,
-                      //             //         )));
-                      //           }, Icons.favorite),
-                      //           iconBtn(() {
-                      //             // Navigator.of(context)
-                      //             //     .push(MaterialPageRoute(builder: (ctx) {
-                      //             //   return PlayListScreen(
-                      //             //       assetsaudioPlayer: audioPlayer,
-                      //             //       audioLists: widget.allAudios);
-                      //             // }));
-                      //           }, Icons.playlist_add),
-                      //         ],
-                      //       )),
-                      // ),
+                      
                     ],
                   ),
-                  //playlist listview
-                  // Stack(
-                  //   fit: StackFit.expand,
-                  //   children: [
-                  //     themeBlue(),
-                  //     themePink(),
-                  //     Positioned(
-                  //       top: 0,
-                  //       child: InkWell(
-                  //         onTap: (() {
-                  //           // addPlaylistForm(context);
-                  //         }),
-                  //         child: Container(
-                  //           width: MediaQuery.of(context).size.width * 0.85,
-                  //           margin: EdgeInsets.only(left: 40, top: 20),
-                  //           decoration: BoxDecoration(
-                  //               boxShadow: [
-                  //                 BoxShadow(
-                  //                   color: Color.fromARGB(255, 14, 14, 14)
-                  //                       .withOpacity(0.1),
-                  //                   spreadRadius: 2,
-                  //                   blurRadius: 2,
-                  //                   offset: const Offset(5, 2),
-                  //                 ),
-                  //               ],
-                  //               borderRadius: BorderRadius.circular(5),
-                  //               border: Border.all(
-                  //                 color: Color.fromARGB(255, 2, 101, 114),
-                  //                 width: 2,
-                  //               )),
-                  //           child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: const [
-                  //                 Icon(
-                  //                   Icons.add,
-                  //                   color: Color.fromARGB(255, 232, 74, 6),
-                  //                   size: 40,
-                  //                 ),
-                  //                 Padding(
-                  //                   padding: EdgeInsets.all(10.0),
-                  //                   child: Text(
-                  //                     'Create Playlist',
-                  //                     style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontSize: 20,
-                  //                         fontWeight: FontWeight.bold),
-                  //                   ),
-                  //                 ),
-                  //               ]),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     // themecyan(),
-                  //     Positioned(
-                  //       top: 20.0,
-                  //       left: 20.0,
-                  //       right: 0.0,
-                  //       bottom: 80.0,
-                  //       child: SafeArea(
-                  //         child: ValueListenableBuilder(
-                  //             valueListenable: box.listenable(),
-                  //             builder:
-                  //                 (BuildContext context, value, Widget? _) {
-                  //               return ListView.separated(
-                  //                   itemBuilder: (context, index) {
-                  //                     return ListTile(
-                  //                       onTap: () {
-                  //                         // Navigator.of(context).push(
-                  //                         //   // MaterialPageRoute(
-                  //                         //   //   builder: (ctx) =>
-                  //                         //   //   //     MyPlaylistScreen(
-                  //                         //   //   //   index: index,
-                  //                         //   //   // ),
-                  //                         //   // ),
-                  //                         // );
-                  //                       },
-                  //                       onLongPress: () => setState(() {
-                  //                         //playlist names deleting fun
-                  //                       }),
-
-                  //                       // playMusic(index: index, assetsAudioplayer: assetAudioPlayer);
-
-                  //                       //   Navigator.of(context).push(MaterialPageRoute(
-                  //                       //     builder: (context) {
-                  //                       //       return DupeNowPlayingScreen(au
-                  //                       //         index: index,
-                  //                       //       );
-                  //                       //     },
-                  //                       //   )
-
-                  //                       //       //     builder: (ctx) =>
-                  //                       //       // NOwPlayingScreen(
-                  //                       //       //       realtimePlayingInfos: realtimePlayingInfos,
-                  //                       //       //       index: index,
-                  //                       //       //       assetsAudioPlayer: assetAudioPlayer,
-                  //                       //       //     ),
-                  //                       //       //   ),
-                  //                       //       );
-
-                  //                       leading: Container(
-                  //                         height: MediaQuery.of(context)
-                  //                                 .size
-                  //                                 .height *
-                  //                             0.1,
-                  //                         width: MediaQuery.of(context)
-                  //                                 .size
-                  //                                 .width *
-                  //                             0.15,
-                  //                         child: Material(
-                  //                           elevation: 18.0,
-                  //                           color: Colors.transparent,
-                  //                           borderRadius:
-                  //                               BorderRadius.circular(50.0),
-                  //                           child: ClipRRect(
-                  //                             borderRadius:
-                  //                                 BorderRadius.circular(50.0),
-                  //                             child: Image.asset(
-                  //                               'assets/images/playlist-app-icon-button-260nw-1906619590.png',
-                  //                               fit: BoxFit.cover,
-                  //                               filterQuality:
-                  //                                   FilterQuality.high,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                       ),
-
-                  //                       // backgroundImage: AssetImage(
-                  //                       //   widget.allAudios[index].metas.image!.path,
-                  //                       // ),
-
-                  //                       //AssetImage(audioList[index].metas.image!.path),
-
-                  //                       // title: Padding(
-                  //                       //   padding:
-                  //                       //       const EdgeInsets.only(bottom: 10),
-                  //                       //   child: Text(
-                  //                       //     //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                  //                       //     // playListNamesNotifier
-                  //                       //     //     .value[index].name,
-
-                  //                       //     style: const TextStyle(
-                  //                       //         color: Colors.white,
-                  //                       //         overflow:
-                  //                       //             TextOverflow.ellipsis),
-                  //                       //   ),
-                  //                       // ),
-                  //                       trailing: IconButton(
-                  //                           onPressed: () {
-                  //                             // playlistNameEdit(context, index);
-                  //                           },
-                  //                           icon: const Icon(Icons.edit)),
-                  //                     );
-                  //                   },
-                  //                   separatorBuilder:
-                  //                       (BuildContext context, int index) {
-                  //                     return Padding(
-                  //                       padding: const EdgeInsets.only(
-                  //                           right: 20, top: 10, bottom: 10),
-                  //                       child: Column(
-                  //                         children: const [
-                  //                           Divider(
-                  //                             thickness: 2,
-                  //                           ),
-                  //                         ],
-                  //                       ),
-                  //                     );
-                  //                   },
-                  //                   itemCount: 5);
-                  //             }),
-                  //       ),
-
-                  //       //  HomeListView(assetsAudioplayer: assetsaudioPlayer,),
-                  //     ),
-
-                  //     // Positioned(
-                  //     //   top: 40.0,
-                  //     //   child: SizedBox(
-                  //     //       width: MediaQuery.of(context).size.width * 1,
-                  //     //       child: Row(
-                  //     //         mainAxisSize: MainAxisSize.max,
-                  //     //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //     //         children: [
-                  //     //           iconBtn(() {}, Icons.refresh_outlined),
-                  //     //           iconBtn(() {
-                  //     //             // Navigator.of(context).push(MaterialPageRoute(
-                  //     //             //     builder: (ctx) => FavoriteScreen(
-                  //     //             //           assetaudioPlayer: audioPlayer,
-                  //     //             //           audiolist: widget.allAudios,
-                  //     //             //         )));
-                  //     //           }, Icons.favorite),
-                  //     //           iconBtn(() {
-                  //     //             // Navigator.of(context)
-                  //     //             //     .push(MaterialPageRoute(builder: (ctx) {
-                  //     //             //   return PlayListScreen(
-                  //     //             //       assetsaudioPlayer: audioPlayer,
-                  //     //             //       audioLists: widget.allAudios);
-                  //     //             // }));
-                  //     //           }, Icons.playlist_add),
-                  //     //         ],
-                  //     //       )),
-                  //     // ),
-                  //   ],
-                  // ),
+                 
 
                   PlayListNameScreen(),
                   FavoriteScreen(),
 
-                  //favorite list
-                  // Stack(
-                  //   fit: StackFit.expand,
-                  //   children: [
-                  //     themeBlue(),
-                  //     themePink(),
-                  //     Positioned(
-                  //       top: 0,
-                  //       child: InkWell(
-                  //         onTap: (() {
-                  //           bottomSheetPlaylistFavoirte(context);
-                  //         }),
-                  //         child: Container(
-                  //           width: MediaQuery.of(context).size.width * 0.85,
-                  //           margin: EdgeInsets.only(left: 40, top: 20),
-                  //           decoration: BoxDecoration(
-                  //               boxShadow: [
-                  //                 BoxShadow(
-                  //                   color: Color.fromARGB(255, 14, 14, 14)
-                  //                       .withOpacity(0.1),
-                  //                   spreadRadius: 2,
-                  //                   blurRadius: 2,
-                  //                   offset: const Offset(5, 2),
-                  //                 ),
-                  //               ],
-                  //               borderRadius: BorderRadius.circular(5),
-                  //               border: Border.all(
-                  //                 color: Color.fromARGB(255, 2, 101, 114),
-                  //                 width: 2,
-                  //               )),
-                  //           child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: const [
-                  //                 Icon(
-                  //                   Icons.add,
-                  //                   color: Color.fromARGB(255, 232, 74, 6),
-                  //                   size: 40,
-                  //                 ),
-                  //                 Padding(
-                  //                   padding: EdgeInsets.all(10.0),
-                  //                   child: Text(
-                  //                     'Add songs',
-                  //                     style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontSize: 20,
-                  //                         fontWeight: FontWeight.bold),
-                  //                   ),
-                  //                 ),
-                  //               ]),
-                  //         ),
-                  //       ),
-                  //     ),
-
-                  //     // themecyan(),
-                  //     Positioned(
-                  //       top: 20.0,
-                  //       left: 20.0,
-                  //       right: 0.0,
-                  //       bottom: 80.0,
-                  //       child: SafeArea(
-                  //         child: ValueListenableBuilder(
-                  //             valueListenable: dbBox.listenable(),
-                  //             builder: (BuildContext context,
-                  //                  value, Widget? _) {
-                  //               return ListView.separated(
-                  //                   itemBuilder: (context, index) {
-                  //                     return ListTile(
-                  //                         onTap: () async {
-                  //                           await play(audioPlayer,
-                  //                               finalSongListFavorite);
-
-                  //                           // audioPlayer.open(
-                  //                           //   Playlist(
-                  //                           //       audios:
-                  //                           //           finalSongListFavorite),
-                  //                           //   showNotification: true,
-                  //                           //   autoStart: false,
-                  //                           //   loopMode: LoopMode.playlist,
-                  //                           //   playInBackground:PlayInBackground.disabledPause,
-                  //                           // );
-                  //                           await audioPlayer
-                  //                               .playlistPlayAtIndex(index);
-                  //                         },
-                  //                         onLongPress: () {
-                  //                           setState(() {
-                  //                             finalSongListFavorite
-                  //                                 .removeAt(index);
-                  //                             favoriteSongsIdDb.removeAt(index);
-                  //                           });
-                  //                           // favoriteAudioList();
-
-                  //                           favorites = false;
-                  //                         },
-
-                  //                         // playMusic(index: index, assetsAudioplayer: assetAudioPlayer);
-
-                  //                         //   Navigator.of(context).push(MaterialPageRoute(
-                  //                         //     builder: (context) {
-                  //                         //       return DupeNowPlayingScreen(au
-                  //                         //         index: index,
-                  //                         //       );
-                  //                         //     },
-                  //                         //   )
-
-                  //                         //       //     builder: (ctx) =>
-                  //                         //       // NOwPlayingScreen(
-                  //                         //       //       realtimePlayingInfos: realtimePlayingInfos,
-                  //                         //       //       index: index,
-                  //                         //       //       assetsAudioPlayer: assetAudioPlayer,
-                  //                         //       //     ),
-                  //                         //       //   ),
-                  //                         //       );
-
-                  //                         leading: CircleAvatar(
-                  //                           maxRadius: 30,
-
-                  //                           backgroundImage: AssetImage(
-                  //                               'assets/images/music logomp3.jpg'),
-                  //                           // backgroundImage: AssetImage(
-                  //                           //   widget.allAudios[index].metas.image!.path,
-                  //                           // ),
-
-                  //                           //AssetImage(audioList[index].metas.image!.path),
-                  //                           child: Container(
-                  //                             decoration: BoxDecoration(
-                  //                               boxShadow: [
-                  //                                 BoxShadow(
-                  //                                   color: const Color.fromARGB(
-                  //                                           255, 41, 41, 41)
-                  //                                       .withOpacity(0.3),
-                  //                                   spreadRadius: 8,
-                  //                                   blurRadius: 5,
-                  //                                   offset: const Offset(0, 0),
-                  //                                 ),
-                  //                               ],
-                  //                               shape: BoxShape.circle,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                         title: Padding(
-                  //                           padding: const EdgeInsets.only(
-                  //                               bottom: 10),
-                  //                           child: Text(
-                  //                             //realtimePlayingInfos.current!.audio.audio.metas.title!,
-                  //                             favoriteSongsList[index].title,
-
-                  //                             style: TextStyle(
-                  //                                 color: Colors.white,
-                  //                                 overflow:
-                  //                                     TextOverflow.ellipsis),
-                  //                           ),
-                  //                         ),
-                  //                         subtitle: Text(
-                  //                           favoriteSongsList[index].album,
-                  //                           style: TextStyle(
-                  //                               color: Colors.white,
-                  //                               overflow:
-                  //                                   TextOverflow.ellipsis),
-                  //                         ),
-                  //                         trailing: Text(index.toString()));
-                  //                   },
-                  //                   separatorBuilder:
-                  //                       (BuildContext context, int index) {
-                  //                     return Padding(
-                  //                       padding: EdgeInsets.only(
-                  //                           right: 20, top: 10, bottom: 10),
-                  //                       child: Column(
-                  //                         children: const [
-                  //                           Divider(
-                  //                             thickness: 2,
-                  //                           ),
-                  //                         ],
-                  //                       ),
-                  //                     );
-                  //                   },
-                  //                   itemCount: favoriteSongsList.length);
-                  //             }),
-                  //       ),
-
-                  //       //  HomeListView(assetsAudioplayer: assetsaudioPlayer,),
-                  //     ),
-
-                  //     // Positioned(
-                  //     //   top: 40.0,
-                  //     //   child: SizedBox(
-                  //     //       width: MediaQuery.of(context).size.width * 1,
-                  //     //       child: Row(
-                  //     //         mainAxisSize: MainAxisSize.max,
-                  //     //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //     //         children: [
-                  //     //           iconBtn(() {}, Icons.refresh_outlined),
-                  //     //           iconBtn(() {
-                  //     //             // Navigator.of(context).push(MaterialPageRoute(
-                  //     //             //     builder: (ctx) => FavoriteScreen(
-                  //     //             //           assetaudioPlayer: audioPlayer,
-                  //     //             //           audiolist: widget.allAudios,
-                  //     //             //         )));
-                  //     //           }, Icons.favorite),
-                  //     //           iconBtn(() {
-                  //     //             // Navigator.of(context)
-                  //     //             //     .push(MaterialPageRoute(builder: (ctx) {
-                  //     //             //   return PlayListScreen(
-                  //     //             //       assetsaudioPlayer: audioPlayer,
-                  //     //             //       audioLists: widget.allAudios);
-                  //     //             // }));
-                  //     //           }, Icons.playlist_add),
-                  //     //         ],
-                  //     //       )),
-                  //     // ),
-                  //   ],
-                  // ),
+                  
                 ]))));
   }
 
-//   final playlistNameController = TextEditingController();
-//   final _formKey = GlobalKey<FormState>();
-//   var error = false;
-
-//   void addPlaylistForm(BuildContext context) {
-//     showDialog(
-//         context: context,
-//         builder: (BuildContext ctx) {
-//           return AlertDialog(
-//             title: const Text('Add new playlist'),
-//             content: Form(
-//               child: TextFormField(
-//                 controller: playlistNameController,
-//                 decoration: const InputDecoration(
-//                     border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.all(Radius.circular(5)))),
-//               ),
-//             ),
-//             actions: [
-//               TextButton(
-//                   onPressed: () {
-//                     Navigator.of(context).pop();
-//                   },
-//                   child: const Text('cancel')),
-//               TextButton(
-//                   onPressed: () async {
-//                     if (playlistNameController.text.isEmpty ||
-//                         playlistNameController.text == 'favorite') {
-//                       SnackBar playlistSnackbar = const SnackBar(
-//                         content: Text('Enter a valid name'),
-//                       );
-//                       ScaffoldMessenger.of(context)
-//                           .showSnackBar(playlistSnackbar);
-//                       Navigator.of(context).pop();
-//                       playlistNameController.clear();
-//                     } else {
-//                       var a = dbBox.values.where((element) =>
-//                           element. == playlistNameController.text);
-//                       if (a.isEmpty) {
-//                         final playlistDataTemp = MusicPlayListNames(
-//                             name: playlistNameController.text);
-//                         final nId = await playListNamesDb.add(playlistDataTemp);
-//                         final playlistData = MusicPlayListNames(
-//                             id: nId, name: playlistNameController.text);
-//                         playListNamesNotifier.value.add(playlistData);
-
-//                         playListNamesNotifier.notifyListeners();
-
-//                         playlistNameController.clear();
-//                         Navigator.of(context).pop();
-//                       } else {
-//                         SnackBar playlistSnackbar = const SnackBar(
-//                           content: Text('playlist name is already exist'),
-//                         );
-//                         ScaffoldMessenger.of(context)
-//                             .showSnackBar(playlistSnackbar);
-//                         Navigator.of(context).pop();
-//                         playlistNameController.clear();
-//                       }
-//                     }
-//                   },
-//                   child: const Text('create'))
-//             ],
-//           );
-//         });
-//   }
-// }
 
   TextEditingController playListNamesController = TextEditingController();
 
-// void playlistNameEdit(context, index) {
-//   playListNamesController.text = playListNamesNotifier.value[index].name;
-//   showDialog(
-//       context: context,
-//       builder: (ctx) {
-//         return AlertDialog(
-//           title: const Text('Edit playlist '),
-//           content: Form(
-//             child: TextFormField(
-//               controller: playListNamesController,
-//               decoration: const InputDecoration(
-//                   border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.all(Radius.circular(5)))),
-//             ),
-//           ),
-//           actions: [
-//             TextButton(
-//                 onPressed: () {
-//                   Navigator.of(context).pop();
-//                 },
-//                 child: Text('Cancel')),
-//             TextButton(
-//                 onPressed: () async {
-//                   if (playListNamesController.text.isEmpty ||
-//                       playListNamesController.text == 'favorite') {
-//                     SnackBar playlistSnackbar = const SnackBar(
-//                       content: Text('Enter a valid name'),
-//                     );
-//                     ScaffoldMessenger.of(context)
-//                         .showSnackBar(playlistSnackbar);
-//                     Navigator.of(context).pop();
-//                     playListNamesController.clear();
-//                   } else {
-//                     var a = playListNamesDb.values.where((element) =>
-//                         element.name == playListNamesController.text);
-//                     if (a.isEmpty) {
-//                       final playlistDataTemp = MusicPlayListNames(
-//                           name: playListNamesController.text);
-//                       await playListNamesDb.put(index, playlistDataTemp);
-//                       final playlistsongstempedit = playListSongsDb
-//                           .get(playListSongsNotifier.value[index].names);
-//                       playlistsongstempedit!.names =
-//                           playListNamesController.text;
-
-//                       final playlistData = MusicPlayListNames(
-//                           id: index, name: playListNamesController.text);
-//                       playListNamesNotifier.value.add(playlistData);
-
-//                       playListNamesNotifier.notifyListeners();
-
-//                       playListNamesController.clear();
-//                       Navigator.of(context).pop();
-//                     } else {
-//                       SnackBar playlistSnackbar = const SnackBar(
-//                         content: Text('playlist name is already exist'),
-//                       );
-//                       ScaffoldMessenger.of(context)
-//                           .showSnackBar(playlistSnackbar);
-//                       Navigator.of(context).pop();
-//                       playListNamesController.clear();
-//                     }
-//                   }
-//                 },
-//                 child: Text('Ok'))
-//           ],
-//         );
-//       });
-// }
-
-  // void favoritebtnAction(index) async {
-  //   List result = favoriteSongsIdDb
-  //       .where((element) => element == songsFromDb[index].id)
-  //       .toList();
-
-  //   if (result.isEmpty) {
-  // final favoritedata = MusicFavorites(
-  //     id: songsFromDb[index].id,
-  //     path: songsFromDb[index].path,
-  //     album: songsFromDb[index].album,
-  //     title: songsFromDb[index].title,
-  //     duration: songsFromDb[index].duration);
-  // favoritesDb.add(favoritedata);
-  // favoriteListNotifier.value.add(favoritedata);
-
-  // favoriteSongsIdDb.add(songsFromDb[index].id!);
-  // box.put('favorites', favoriteSongsIdDb);
-  // favoriteSongsIdDb = box.get('favorites') as List<dynamic>;
-  // favoriteSongsIdDb.sort(
-  //   (b, a) => a.compareTo(b),
-  // );
-
-  // favoritesonglistNotifierdb.value.addAll(favoriteSongsIdDb);
-
-  // log(favoriteSongsIdDb.toString());
-
-  // log(favoriteSongsIdDb.toString());
-
-  // log(result.toString());
-  //     for (var i = 0; i < favoriteSongsIdDb.length; i++) {
-  //   finalSongListFavorite.add(Audio.file(favoriteSongsIdDb[i].path,
-  //       metas: Metas(
-  //         title: favoriteSongsList[i].title,
-  //         artist: favoriteSongsList[i].album,
-  //       )));
-  // }
-  // for (var element in ) {
-  //   finalSongListFavorite.add(Audio.file(favoriteSongsIdDb.path));
-  // }
-
-  //     favorites = false;
-  //   } else {
-  //     favorites = true;
-  //   }
-  // }
+//  
 
   List<int> sortedFavoriteSongList = [];
 
-// void addPlaylistSongsDbNowPlay(
-//     index, RealtimePlayingInfos realtimePlayingInfos, context) async {
-//   List<MusicPlayListSongs> currentList = playListSongsDb.values.toList();
-//   var contains = currentList.where((element) =>
-//       element.names == playListNamesNotifier.value[index].name &&
-//       element.songs ==
-//           musicValueNotifier.value[realtimePlayingInfos.current!.index].path);
-
-//   if (contains.isEmpty) {
-//     final listofPlaylistData = MusicPlayListSongs(
-//         id: realtimePlayingInfos.current!.index,
-//         songs: realtimePlayingInfos.current!.audio.audio.path,
-//         names: playListNamesNotifier.value[index].name,
-//         title: realtimePlayingInfos.current!.audio.audio.metas.title!,
-//         subtitle: realtimePlayingInfos.current!.audio.audio.metas.title!,
-//         duration: musicValueNotifier
-//             .value[realtimePlayingInfos.current!.index].duration);
-//     playListSongsDb.add(listofPlaylistData);
-
-//     log(playListNames.toString());
-
-//     playListSongsNotifier.value.add(listofPlaylistData);
-//     playListSongsNotifier.notifyListeners();
-
-//     log(listofPlaylistData.songs.toString());
-//     SnackBar playlistSnackbar = SnackBar(
-//       content: Text('Song  added to playlist'),
-//     );
-//     ScaffoldMessenger.of(context).showSnackBar(playlistSnackbar);
-//     Navigator.of(context).pop();
-//   } else {
-//     SnackBar playlistSnackbar = SnackBar(
-//       content: Text('Song already exist'),
-//     );
-//     ScaffoldMessenger.of(context).showSnackBar(playlistSnackbar);
-//     Navigator.of(context).pop();
-//   }
-
-//   // final music = playListSongsDb.getAt(playlistNameIndex);
-//   // log(music!.songs.toString());
-// }
-
-// void favoriteAudioList() {
-//   favoriteSongsList = songsFromDb.where((element) {
-//     return favoriteSongsIdDb.contains(element.id);
-//   }).toList();
-
-//   for (var i = 0; i < favoriteSongsList.length; i++) {
-//     finalSongListFavorite.add(Audio.file(favoriteSongsList[i].path,
-//         metas: Metas(
-//           title: favoriteSongsList[i].title,
-//           artist: favoriteSongsList[i].album,
-//         )));
-//   }
-// }
 }
 
 class SongsSearch extends SearchDelegate {
@@ -1101,11 +413,11 @@ class SongsSearch extends SearchDelegate {
                     return Container(
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 21, 132, 145),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(15).r,
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          maxRadius: 30,
+                          maxRadius: 30.r,
 
                           backgroundImage:
                               AssetImage('assets/images/music logomp3.jpg'),
@@ -1132,33 +444,13 @@ class SongsSearch extends SearchDelegate {
                         ),
                         onTap: () async {
                           Navigator.pop(context);
-                          await play(audioPlayer, searched, index);
+                          await play(
+                              assetsaudioPlayer: audioPlayer,
+                              audioSongs: searched,
+                              index: index);
                           await audioPlayer.playlistPlayAtIndex(index);
                         },
-                        // onTap: (() async {
-                        //   Navigator.pop(context);
-                        //   await pla(
-                        //     fullSongs: searched,
-                        //     index: index,
-                        //     songId: int.parse(
-                        //       searched[index].metas.id!,
-                        //     ).toString(),
-                        //   ).openAssetPlayer(
-                        //     index: index,
-                        //     songs: searched,
-                        //   );
-                        //   // ignore: use_build_context_synchronously
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: ((context) => MusicPlaySceeen(
-                        //             allSongs: fullSongs,
-                        //             index: index,
-                        //             songId: searched.toString(),
-                        //           )),
-                        //     ),
-                        //   );
-                        // }),
+                        
                         title: Padding(
                           padding: const EdgeInsets.only(
                             left: 5.0,
@@ -1170,8 +462,9 @@ class SongsSearch extends SearchDelegate {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                             ),
+                            
                           ),
                         ),
                         subtitle: Padding(
@@ -1194,7 +487,7 @@ class SongsSearch extends SearchDelegate {
                     index,
                   ) {
                     return SizedBox(
-                      height: 10,
+                      height: 10.h,
                     );
                   },
                   itemCount: searched.length),

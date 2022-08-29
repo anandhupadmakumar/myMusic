@@ -7,9 +7,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:music_sample/db_functions/db_crud_function.dart';
-import 'package:music_sample/db_functions/music_modal_class.dart';
-import 'package:music_sample/main.dart';
+import 'package:heza/db_functions/db_crud_function.dart';
+import 'package:heza/db_functions/music_modal_class.dart';
+import 'package:heza/main.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../db_functions/db_crud_function.dart';
@@ -43,40 +44,43 @@ class _PlayListNameScreenState extends State<PlayListNameScreen> {
                       offset: const Offset(5, 2),
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(5).r,
                   border: Border.all(
                     color: Color.fromARGB(255, 2, 101, 114),
-                    width: 2,
+                    width: 2.w,
                   )),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.add,
-                      color: Color.fromARGB(255, 232, 74, 6),
-                      size: 40,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        'Create Playlist',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ]),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(
+                  Icons.add,
+                  color: const Color.fromARGB(255, 232, 74, 6),
+                  size: 40.sp,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Create Playlist',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ]),
             ),
           ),
         ),
         // themecyan(),
         Positioned(
-          top: 20.0,
-          left: 20.0,
-          right: 0.0,
-          bottom: 80.0,
-          child: SafeArea(
+          top: 50.0.h,
+          left: 20.0.h,
+          right: 0.0.h,
+          bottom: 40.h,
+          child: Container(
+            color: Colors.transparent,
+            height: double.infinity,
+            width: double.infinity,
+            // color: Colors.red,
             child: ValueListenableBuilder(
                 valueListenable: box.listenable(),
                 builder: (BuildContext context, value, Widget? _) {
@@ -101,7 +105,7 @@ class _PlayListNameScreenState extends State<PlayListNameScreen> {
 
                             // playlistsongid!.clear();
 
-                            deletePopupPlaylistName(context,index);
+                            deletePopupPlaylistName(context, index);
                             //playlist names deleting fun
                           }),
 
@@ -130,9 +134,9 @@ class _PlayListNameScreenState extends State<PlayListNameScreen> {
                             child: Material(
                               elevation: 18.0,
                               color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(50.0),
+                              borderRadius: BorderRadius.circular(50.0).r,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.0),
+                                borderRadius: BorderRadius.circular(50.0).r,
                                 child: Image.asset(
                                   'assets/images/playlist-app-icon-button-260nw-1906619590.png',
                                   fit: BoxFit.cover,
@@ -237,9 +241,9 @@ class _PlayListNameScreenState extends State<PlayListNameScreen> {
             content: Form(
               child: TextFormField(
                 controller: playListNameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)))),
+                        borderRadius: BorderRadius.all(Radius.circular(5).r))),
               ),
             ),
             actions: [

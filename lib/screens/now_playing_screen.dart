@@ -2,19 +2,15 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:music_sample/play_operations/next_previous_function.dart';
-import 'package:music_sample/play_operations/play_pause.dart';
 
-import 'package:music_sample/widgets/bottom_sheet_mp_list.dart';
-import 'package:music_sample/widgets/home_listview.dart';
 
-import 'package:music_sample/widgets/iconbtn_widget.dart';
-import 'package:music_sample/widgets/theme_color.dart';
 
-import '../widgets/playbar_widget.dart';
-import '../widgets/realtime_listview.dart';
-import '../widgets/realtimeinfo_slider.dart';
-import '../widgets/slider_widget.dart';
+
+import 'package:heza/widgets/iconbtn_widget.dart';
+import 'package:heza/widgets/theme_color.dart';
+
+
+
 import '../widgets/timetext_slider.dart';
 
 class NOwPlayingScreen extends StatefulWidget {
@@ -158,8 +154,7 @@ class _NOwPlayingScreenState extends State<NOwPlayingScreen> {
                       height: 40,
                     ),
 
-                    playBar(
-                        widget.realtimePlayingInfos, widget.assetsAudioPlayer!),
+                   
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     //   children: [

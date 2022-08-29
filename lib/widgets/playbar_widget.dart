@@ -1,7 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:music_sample/play_operations/next_previous_function.dart';
-import 'package:music_sample/screens/now_playing_screen.dart';
+import 'package:heza/play_operations/next_previous_function.dart';
+import 'package:heza/screens/now_playing_screen.dart';
 
 Widget playBar(RealtimePlayingInfos realtimePlayingInfos,
     AssetsAudioPlayer assetsAudioPlayer) {
