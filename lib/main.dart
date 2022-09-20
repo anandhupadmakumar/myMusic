@@ -14,7 +14,7 @@ final Box<List<dynamic>> box = StorageBox.getInstance();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(MusicModelAdapter());
+   Hive.registerAdapter(MusicModelAdapter());
   await Hive.openBox<List>(boxname);
 
   List<dynamic> favKey = box.keys.toList();
@@ -24,7 +24,7 @@ Future<void> main() async {
   }
   
   List<dynamic> playListName = box.keys.toList();
-  if (!(favKey.contains('playlist_name'))) {
+  if (!(playListName.contains('playlist_name'))) {
     List<dynamic> playlistName = [];
     await box.put('playlist_name', playlistName);
   }

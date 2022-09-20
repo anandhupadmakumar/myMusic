@@ -29,8 +29,6 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-
-
 // List<String> allAudio = [];
 // List<String> dbSongs = [];
 
@@ -157,8 +155,6 @@ class _SplashScreenState extends State<SplashScreen> {
     log('requst permission');
     if (await _requestPermission(Permission.storage)) {
       searchInStorage();
-
-      mSplash();
     } else {
       splashFetch();
     }
@@ -216,13 +212,16 @@ class _SplashScreenState extends State<SplashScreen> {
     // play(assetsAudioPlayer);
     splashFetch();
     print('started');
+    
+      mSplash();
+    
 
     // TODO: implement initState
     super.initState();
   }
 
   Future<void> mSplash() async {
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 2));
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (ctx) => HomeScreenDupe()),
@@ -231,22 +230,36 @@ class _SplashScreenState extends State<SplashScreen> {
 
   onSuccess(audioListFromStorage) async {
     final valueMap = jsonDecode(audioListFromStorage);
+   
+
     // final a = MusicListData.fromJson(valueMap);
     List songlist = valueMap;
-    songlist2 = songlist.map((e) {
+
+ songlist2 = songlist.map((e) {
       return MusicListData.fromJson(e);
     }).toList();
-    allSongs = songlist2
-        .map((music) => MusicModel(
+
+    allSongs =  songlist2
+        .map(
+          (music) => MusicModel(
             id: int.parse(music.id!),
             title: music.title!,
             path: music.path!,
             album: music.albums!,
-            duration:_printDuration(Duration( milliseconds:int.parse(music.duration.toString())) ) ))
+            duration: _printDuration(
+              Duration(
+                milliseconds: int.parse(
+                  music.duration.toString(),
+                ),
+              ),
+            ),
+          ),
+        )
         .toList();
-    box.put('mymusic', allSongs);
-    songsFromDb=box.get('mymusic') as List<MusicModel>;
-    
+
+    await box.put('mymusic', allSongs);
+    songsFromDb = box.get('mymusic') as List<MusicModel>;
+
     for (var element in songsFromDb) {
       finalSongList.add(Audio.file(element.path!,
           metas: Metas(
@@ -289,7 +302,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //       metas: Metas(
     //         title: songsFromDb[i].title,
     //         artist: songsFromDb[i].album,
-             
+
     //       )));
     //   log('inside for loop ................${finalSongList.toString()}');
     // }

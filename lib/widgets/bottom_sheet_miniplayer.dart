@@ -70,7 +70,10 @@ Widget bottomMiniPlayer({
                               songsSkip = true;
                             }
                           },
-                          child: Icon(Icons.skip_previous),
+                          child: Icon(
+                            Icons.skip_previous,
+                            color: Colors.white,
+                          ),
                         ),
                         IconButton(
                           onPressed: () {
@@ -94,7 +97,8 @@ Widget bottomMiniPlayer({
                               songsSkip = true;
                             }
                           },
-                          child: const Icon(Icons.skip_next),
+                          child:
+                              const Icon(Icons.skip_next, color: Colors.white),
                         ),
                       ]),
                 ),

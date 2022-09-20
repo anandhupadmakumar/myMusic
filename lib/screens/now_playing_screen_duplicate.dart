@@ -226,15 +226,21 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
                   // favoritebtnAction(realtimePlayingInfos.current!.index);
                   // favoriteSnackbar(context: context);
                   setState(() {
-                    if (favoriteIdList.contains(
-                        songsFromDb[realtimePlayingInfos.current!.index].id)) {
-                      favoriteIdList.remove(
-                          songsFromDb[realtimePlayingInfos.current!.index].id);
+                    if (favoriteIdList.contains(songsFromDb[
+                            audioPlayer.current.value!.playlist.currentIndex]
+                        .id)) {
+                      favoriteIdList.remove(songsFromDb[
+                              audioPlayer.current.value!.playlist.currentIndex]
+                          .id);
                       box.put('favourites', favoriteIdList);
+
+                      
                     } else {
                       favoriteIdAdd(
-                          songsFromDb[realtimePlayingInfos.current!.index].id!,
-                          realtimePlayingInfos.current!.index);
+                          songsFromDb[audioPlayer
+                                  .current.value!.playlist.currentIndex]
+                              .id!,
+                          audioPlayer.current.value!.playlist.currentIndex);
                     }
                   });
 
@@ -328,7 +334,14 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
           highlightColor: Colors.transparent,
         ),
         IconButton(
-          onPressed: () => widget.audioPlayer.previous(),
+          onPressed: () async {
+            if (songsSkip) {
+              songsSkip = false;
+              await widget.audioPlayer.previous();
+
+              songsSkip = true;
+            }
+          },
           icon: const Icon(Icons.fast_rewind_rounded),
           iconSize: 30.sp,
           color: Colors.white,
@@ -348,7 +361,14 @@ class _DupeNowPlayingScreenState extends State<DupeNowPlayingScreen> {
           highlightColor: Colors.transparent,
         ),
         IconButton(
-          onPressed: () => widget.audioPlayer.next(),
+          onPressed: () async {
+            if (songsSkip) {
+              songsSkip = false;
+              await widget.audioPlayer.next();
+
+              songsSkip = true;
+            }
+          },
           icon: Icon(Icons.fast_forward_rounded),
           iconSize: 30.sp,
           color: Colors.white,
@@ -452,7 +472,10 @@ playlistNowPlayingScreen(context) {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: (() async {
-                          await play(assetsaudioPlayer:audioPlayer, audioSongs:finalSongList,index: index);
+                          await play(
+                              assetsaudioPlayer: audioPlayer,
+                              audioSongs: finalSongList,
+                              index: index);
                           await audioPlayer.playlistPlayAtIndex(index);
                         }),
                         // onTap: () {

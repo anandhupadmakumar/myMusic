@@ -36,7 +36,10 @@ favoriteIdAdd(int homeScreenId, index) async {
 
     print(favoriteIdList.toString());
     favorites = false;
-    favoriteAudioList();
+    final a = favoriteAudioList();
+
+    play(assetsaudioPlayer: audioPlayer, audioSongs: a, index: index);
+    audioPlayer.isPlaying;
   } else {
     favorites = true;
   }
@@ -220,24 +223,18 @@ void deletePopupFavorite(context, index) {
                   finalSongListFavorite.remove(finalSongListFavorite[index]);
                   box.put('favourites', favoriteIdList);
                   finalFavoriteAudioSongs.clear();
+
                   finalFavoriteAudioSongs = favoriteAudioList();
 
-                  // audioPlayer.playlistAudioFinished.listen((event) async {
-                  //   event.audio.audio.currentlyOpenedIn.;
-                  //   await play(audioPlayer, finalFavoriteAudioSongs, index);
-
-                  // });
+                  favoriteAudioSongListPassing(index);
                   // if (audioPlayer.playerState.hasValue) {
 
                   // }
-                 
-                 
-                    play(
-                        assetsaudioPlayer: audioPlayer,
-                        audioSongs: finalFavoriteAudioSongs,
-                        index: index);
-                    
-   
+
+                  // play(
+                  //     assetsaudioPlayer: audioPlayer,
+                  //     audioSongs: finalFavoriteAudioSongs,
+                  //     index: index);
 
                   // await play(
                   //     assetsaudioPlayer: audioPlayer,
@@ -251,6 +248,34 @@ void deletePopupFavorite(context, index) {
           ],
         );
       });
+}
+
+void favoriteAudioSongListPassing(int index) {
+  audioPlayer.current.listen((event) async {
+    log('deleting song$event');
+    if (event!.playlist.currentIndex != index) {
+      
+      audioPlayer.isPlaying;
+    } else {
+      await play(
+          assetsaudioPlayer: audioPlayer,
+          audioSongs: finalFavoriteAudioSongs,
+          index: index);
+    }
+  });
+}
+
+void favoriteAudioSongAddListPassing(int index, List<Audio> favAudioSongs) {
+  audioPlayer.current.listen((event) async {
+    if (event!.playlist.currentIndex == index) {
+      audioPlayer.isPlaying;
+    } else {
+      await play(
+          assetsaudioPlayer: audioPlayer,
+          audioSongs: favAudioSongs,
+          index: index);
+    }
+  });
 }
 
 void deletePopupPlaylistName(context, index) {
@@ -303,6 +328,17 @@ void deletePopupPlaylistSongs(context, index, playlistNameIndex) {
                   playlistSongIdList = box.get(playlistNames[playlistNameIndex])
                       as List<dynamic>;
                   Navigator.of(context).pop();
+
+                  audioPlayer.current.listen((event) async {
+                    if (event!.playlist.currentIndex != index) {
+                      audioPlayer.isPlaying;
+                    } else {
+                      await play(
+                          assetsaudioPlayer: audioPlayer,
+                          audioSongs: playlistAudioSongs,
+                          index: index);
+                    }
+                  });
                 },
                 child: const Text('Yes')),
           ],

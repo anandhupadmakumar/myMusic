@@ -1,16 +1,14 @@
-
+import 'dart:developer';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 import 'package:hive_flutter/adapters.dart';
 import 'package:heza/main.dart';
 
 import 'package:heza/screens/playlist_name_screen.dart';
-
 
 import '../db_functions/db_crud_function.dart';
 import '../db_functions/music_modal_class.dart';
@@ -26,6 +24,7 @@ bool? notification;
 bool favorites = false;
 bool playlistvalidation = false;
 final audioPlayer = AssetsAudioPlayer();
+
 Future<void> play(
     {required AssetsAudioPlayer assetsaudioPlayer,
     required List<Audio> audioSongs,
@@ -34,7 +33,7 @@ Future<void> play(
     Playlist(audios: audioSongs, startIndex: index!),
     showNotification:
         notification == null || notification == true ? true : false,
-    autoStart: false,
+    autoStart: true,
     loopMode: LoopMode.playlist,
     respectSilentMode: false,
     playInBackground: PlayInBackground.disabledPause,
@@ -167,7 +166,7 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
                                             songsSkip = true;
                                           }
                                         }),
-                                       
+
                                         leading: CircleAvatar(
                                           maxRadius: 30.r,
 
@@ -288,26 +287,18 @@ class _HomeScreenDupeState extends State<HomeScreenDupe>
 
                         //  HomeListView(assetsAudioplayer: assetsaudioPlayer,),
                       ),
-
-                      
                     ],
                   ),
-                 
-
                   PlayListNameScreen(),
                   FavoriteScreen(),
-
-                  
                 ]))));
   }
 
-
   TextEditingController playListNamesController = TextEditingController();
 
-//  
+//
 
   List<int> sortedFavoriteSongList = [];
-
 }
 
 class SongsSearch extends SearchDelegate {
@@ -450,7 +441,6 @@ class SongsSearch extends SearchDelegate {
                               index: index);
                           await audioPlayer.playlistPlayAtIndex(index);
                         },
-                        
                         title: Padding(
                           padding: const EdgeInsets.only(
                             left: 5.0,
@@ -464,7 +454,6 @@ class SongsSearch extends SearchDelegate {
                               color: Colors.white,
                               fontSize: 18.sp,
                             ),
-                            
                           ),
                         ),
                         subtitle: Padding(
